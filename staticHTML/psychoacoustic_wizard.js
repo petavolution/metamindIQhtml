@@ -897,6 +897,17 @@ function endGame() {
         cancelAnimationFrame(animationId);
         animationId = null;
     }
+
+    // Save progress to localStorage
+    if (typeof MetaMind !== 'undefined' && MetaMind.Progress) {
+        MetaMind.Progress.saveSession('psychoacoustic_wizard', {
+            score: gameState.score,
+            level: gameState.level,
+            accuracy: accuracy,
+            maxCombo: gameState.maxCombo
+        });
+        log('info', `Progress saved: score=${gameState.score}, level=${gameState.level}`);
+    }
 }
 
 // Resize the game to fit the screen

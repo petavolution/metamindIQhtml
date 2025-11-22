@@ -668,6 +668,20 @@ function updateStats() {
 // Complete the game
 function completeGame() {
     showScreen('complete');
+
+    // Save progress to localStorage
+    if (typeof MetaMind !== 'undefined' && MetaMind.Progress) {
+        const accuracy = state.totalQuestions > 0
+            ? Math.round((state.correctAnswers / state.totalQuestions) * 100)
+            : 0;
+        MetaMind.Progress.saveSession('symbol_memory', {
+            score: state.score,
+            level: state.level,
+            accuracy: accuracy,
+            gridSize: state.gridSize
+        });
+        log('info', `Progress saved: score=${state.score}, level=${state.level}`);
+    }
 }
 
 // Initialize the game when the DOM is loaded

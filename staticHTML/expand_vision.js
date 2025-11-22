@@ -235,6 +235,16 @@ function startRound() {
     if (state.round > state.totalRounds) {
         state.phase = 'completed';
         showScreen('complete');
+
+        // Save progress to localStorage
+        if (typeof MetaMind !== 'undefined' && MetaMind.Progress) {
+            MetaMind.Progress.saveSession('expand_vision', {
+                score: state.score,
+                level: state.level,
+                accuracy: state.correctAnswers > 0 ? Math.round((state.correctAnswers / state.totalRounds) * 100) : 0
+            });
+            log('info', `Progress saved: score=${state.score}, level=${state.level}`);
+        }
         return;
     }
     

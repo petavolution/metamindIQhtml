@@ -317,9 +317,21 @@ function checkAnswers() {
     
     // Update UI
     updateStats();
-    
+
     // Show results screen
     showScreen('results');
+
+    // Save progress to localStorage
+    if (typeof MetaMind !== 'undefined' && MetaMind.Progress) {
+        const accuracy = Math.round((correctAnswers / state.totalPatterns) * 100);
+        MetaMind.Progress.saveSession('morph_matrix', {
+            score: state.score,
+            level: state.level,
+            accuracy: accuracy,
+            matrixSize: state.matrixSize
+        });
+        log('info', `Progress saved: score=${state.score}, level=${state.level}`);
+    }
 }
 
 // Prepare for next challenge

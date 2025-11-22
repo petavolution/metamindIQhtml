@@ -711,6 +711,19 @@ function showResults() {
     
     // Switch to results screen
     switchScreen('results');
+
+    // Save progress to localStorage
+    if (typeof MetaMind !== 'undefined' && MetaMind.Progress) {
+        const totalQuestions = Object.values(gameState.categoryStats).reduce((sum, s) => sum + s.total, 0);
+        const correctAnswers = Object.values(gameState.categoryStats).reduce((sum, s) => sum + s.correct, 0);
+        MetaMind.Progress.saveSession('music_theory', {
+            score: gameState.score,
+            level: gameState.level,
+            accuracy: totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0,
+            bestStreak: gameState.bestStreak
+        });
+        log('info', `Progress saved: score=${gameState.score}, level=${gameState.level}`);
+    }
 }
 
 // Restart the game

@@ -750,6 +750,99 @@ const MetaMind = (function() {
     };
 
     // ============================================
+    // PROGRESS TRACKING
+    // ============================================
+
+    const Progress = {
+        /**
+         * Save a session result for a module
+         * @param {string} moduleName - Module identifier
+         * @param {Object} result - Session result data
+         */
+        saveSession(moduleName, result) {
+            const key = `progress_${moduleName}`;
+            const data = Storage.load(key, { sessions: [], bestScore: 0, bestLevel: 0, totalSessions: 0 });
+
+            // Add timestamp to result
+            result.timestamp = new Date().toISOString();
+
+            // Update best scores
+            if (result.score > data.bestScore) data.bestScore = result.score;
+            if (result.level > data.bestLevel) data.bestLevel = result.level;
+            data.totalSessions++;
+
+            // Keep last 50 sessions
+            data.sessions.push(result);
+            if (data.sessions.length > 50) data.sessions = data.sessions.slice(-50);
+
+            Storage.save(key, data);
+            Debug.info('Progress', `Saved session for ${moduleName}`, { score: result.score, level: result.level });
+            return data;
+        },
+
+        /**
+         * Get progress data for a module
+         * @param {string} moduleName - Module identifier
+         */
+        getProgress(moduleName) {
+            const key = `progress_${moduleName}`;
+            return Storage.load(key, { sessions: [], bestScore: 0, bestLevel: 0, totalSessions: 0 });
+        },
+
+        /**
+         * Get summary statistics for a module
+         * @param {string} moduleName - Module identifier
+         */
+        getStats(moduleName) {
+            const data = this.getProgress(moduleName);
+            if (data.sessions.length === 0) {
+                return { bestScore: 0, bestLevel: 0, avgScore: 0, totalSessions: 0, recentTrend: 'none' };
+            }
+
+            const scores = data.sessions.map(s => s.score || 0);
+            const avgScore = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+
+            // Calculate recent trend (last 5 vs previous 5)
+            let recentTrend = 'stable';
+            if (scores.length >= 10) {
+                const recent5 = scores.slice(-5).reduce((a, b) => a + b, 0) / 5;
+                const prev5 = scores.slice(-10, -5).reduce((a, b) => a + b, 0) / 5;
+                if (recent5 > prev5 * 1.1) recentTrend = 'improving';
+                else if (recent5 < prev5 * 0.9) recentTrend = 'declining';
+            }
+
+            return {
+                bestScore: data.bestScore,
+                bestLevel: data.bestLevel,
+                avgScore,
+                totalSessions: data.totalSessions,
+                recentTrend
+            };
+        },
+
+        /**
+         * Get all modules progress summary
+         */
+        getAllStats() {
+            const modules = ['symbol_memory', 'morph_matrix', 'expand_vision', 'music_theory', 'psychoacoustic_wizard', 'neural_synthesis'];
+            const stats = {};
+            modules.forEach(m => {
+                stats[m] = this.getStats(m);
+            });
+            return stats;
+        },
+
+        /**
+         * Clear progress for a module
+         * @param {string} moduleName - Module identifier
+         */
+        clear(moduleName) {
+            Storage.remove(`progress_${moduleName}`);
+            Debug.info('Progress', `Cleared progress for ${moduleName}`);
+        }
+    };
+
+    // ============================================
     // COLOR UTILITIES
     // ============================================
 
@@ -989,6 +1082,7 @@ const MetaMind = (function() {
         MathUtils,
         Storage,
         Colors,
+        Progress,
 
         // Error handling & debugging
         Debug,
