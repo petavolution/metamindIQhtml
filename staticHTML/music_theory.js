@@ -1,7 +1,38 @@
 /**
- * Music Theory Training Module
+ * Music Theory Training Module - Consolidated v2.0
  * Interactive web version of the Music Theory module
+ * Features: Piano keyboard, Circle of Fifths, Waveform visualization
  */
+
+// Module name for logging
+const MODULE_NAME = 'MusicTheory';
+
+// Helper function for logging
+function log(level, message, data) {
+    if (typeof MetaMind !== 'undefined' && MetaMind.Debug) {
+        MetaMind.Debug[level](MODULE_NAME, message, data);
+    } else {
+        const logFn = level === 'error' ? console.error :
+                      level === 'warn' ? console.warn : console.log;
+        logFn(`[${MODULE_NAME}]`, message, data || '');
+    }
+}
+
+// Safe event listener attachment
+function addClickListener(element, handler, name) {
+    if (element) {
+        element.addEventListener('click', function(e) {
+            try {
+                handler(e);
+            } catch (err) {
+                log('error', `Error in ${name} handler: ${err.message}`, err);
+            }
+        });
+        return true;
+    }
+    log('warn', `Cannot attach ${name} handler - element not found`);
+    return false;
+}
 
 // Audio Context for Web Audio API
 let audioContext;
@@ -24,42 +55,10 @@ const gameState = {
     }
 };
 
-// DOM Elements
-const screens = {
-    start: document.getElementById('start-screen'),
-    game: document.getElementById('game-screen'),
-    feedback: document.getElementById('feedback-screen'),
-    results: document.getElementById('results-screen')
-};
-
-const elements = {
-    level: document.getElementById('level'),
-    score: document.getElementById('score'),
-    streak: document.getElementById('streak'),
-    challengeMessage: document.getElementById('challenge-message'),
-    pianoContainer: document.getElementById('piano-container'),
-    waveformDisplay: document.getElementById('waveform-display'),
-    circleOfFifths: document.getElementById('circle-of-fifths'),
-    optionsContainer: document.getElementById('options-container'),
-    feedbackMessage: document.getElementById('feedback-message'),
-    correctAnswer: document.getElementById('correct-answer'),
-    finalScore: document.getElementById('final-score'),
-    bestStreak: document.getElementById('best-streak'),
-    maxLevel: document.getElementById('max-level'),
-    categoryStats: document.getElementById('category-stats')
-};
-
-// Buttons
-const buttons = {
-    start: document.getElementById('start-button'),
-    play: document.getElementById('play-button'),
-    submit: document.getElementById('submit-button'),
-    next: document.getElementById('next-button'),
-    restart: document.getElementById('restart-button'),
-    togglePiano: document.getElementById('toggle-piano'),
-    toggleWaveform: document.getElementById('toggle-waveform'),
-    toggleCircle: document.getElementById('toggle-circle')
-};
+// DOM Elements - populated in init() after DOM is ready
+let screens = {};
+let elements = {};
+let buttons = {};
 
 // Music Data
 const musicData = {
@@ -107,95 +106,157 @@ const difficulties = {
 
 // Initialize the module
 function init() {
+    log('info', 'Initializing module');
+
+    // Populate DOM elements after DOM is ready
+    screens = {
+        start: document.getElementById('start-screen'),
+        game: document.getElementById('game-screen'),
+        feedback: document.getElementById('feedback-screen'),
+        results: document.getElementById('results-screen')
+    };
+
+    elements = {
+        level: document.getElementById('level'),
+        score: document.getElementById('score'),
+        streak: document.getElementById('streak'),
+        challengeMessage: document.getElementById('challenge-message'),
+        pianoContainer: document.getElementById('piano-container'),
+        waveformDisplay: document.getElementById('waveform-display'),
+        circleOfFifths: document.getElementById('circle-of-fifths'),
+        optionsContainer: document.getElementById('options-container'),
+        feedbackMessage: document.getElementById('feedback-message'),
+        correctAnswer: document.getElementById('correct-answer'),
+        finalScore: document.getElementById('final-score'),
+        bestStreak: document.getElementById('best-streak'),
+        maxLevel: document.getElementById('max-level'),
+        categoryStats: document.getElementById('category-stats')
+    };
+
+    buttons = {
+        start: document.getElementById('start-button'),
+        play: document.getElementById('play-button'),
+        submit: document.getElementById('submit-button'),
+        next: document.getElementById('next-button'),
+        restart: document.getElementById('restart-button'),
+        togglePiano: document.getElementById('toggle-piano'),
+        toggleWaveform: document.getElementById('toggle-waveform'),
+        toggleCircle: document.getElementById('toggle-circle')
+    };
+
+    // Validate required elements
+    const requiredElements = ['start', 'game'];
+    const missing = requiredElements.filter(name => !screens[name]);
+    if (missing.length > 0) {
+        log('error', `Missing required screen elements: ${missing.join(', ')}`);
+        return;
+    }
+
     // Fix visualization display issues
     fixVisualizationDisplay();
-    
-    // Set up button event listeners
-    buttons.start.addEventListener('click', startGame);
-    buttons.play.addEventListener('click', playCurrentChallenge);
-    buttons.submit.addEventListener('click', submitAnswer);
-    buttons.next.addEventListener('click', nextChallenge);
-    buttons.restart.addEventListener('click', restartGame);
-    
+
+    // Set up button event listeners with safe attachment
+    addClickListener(buttons.start, startGame, 'startButton');
+    addClickListener(buttons.play, playCurrentChallenge, 'playButton');
+    addClickListener(buttons.submit, submitAnswer, 'submitButton');
+    addClickListener(buttons.next, nextChallenge, 'nextButton');
+    addClickListener(buttons.restart, restartGame, 'restartButton');
+
     // Set up visualization toggle buttons
-    buttons.togglePiano.addEventListener('click', () => toggleVisualization('piano'));
-    buttons.toggleWaveform.addEventListener('click', () => toggleVisualization('waveform'));
-    buttons.toggleCircle.addEventListener('click', () => toggleVisualization('circle'));
-    
+    addClickListener(buttons.togglePiano, () => toggleVisualization('piano'), 'togglePiano');
+    addClickListener(buttons.toggleWaveform, () => toggleVisualization('waveform'), 'toggleWaveform');
+    addClickListener(buttons.toggleCircle, () => toggleVisualization('circle'), 'toggleCircle');
+
     // Initialize the piano keyboard
-    initPianoKeyboard();
-    
+    try {
+        initPianoKeyboard();
+    } catch (err) {
+        log('error', `Failed to initialize piano keyboard: ${err.message}`, err);
+    }
+
     // Initialize the circle of fifths
-    initCircleOfFifths();
-    
+    try {
+        initCircleOfFifths();
+    } catch (err) {
+        log('error', `Failed to initialize circle of fifths: ${err.message}`, err);
+    }
+
     // Add window resize handler
     window.addEventListener('resize', fixVisualizationDisplay);
+
+    log('info', 'Module initialized successfully');
 }
 
 // Fix visualization display issues
 function fixVisualizationDisplay() {
     // Make sure visualization area has proper dimensions
     const visualizationArea = document.getElementById('visualization-area');
-    if (visualizationArea) {
-        // Set explicit display property
-        visualizationArea.style.display = 'block';
-        
-        // Make sure visualization containers have proper dimensions and visibility
-        const containers = [
-            elements.pianoContainer,
-            elements.waveformDisplay, 
-            elements.circleOfFifths
-        ];
-        
-        containers.forEach(container => {
-            if (container) {
-                // Ensure container is visible even if not currently active
-                container.style.opacity = '1';
-                
-                // Make sure hidden class only affects display, not other properties
-                if (container.classList.contains('hidden')) {
-                    container.style.display = 'none';
-                } else {
-                    container.style.display = 'flex';
-                }
-            }
-        });
-        
-        // Force active visualization to be visible
-        if (buttons.togglePiano.classList.contains('active')) {
-            elements.pianoContainer.style.display = 'flex';
-            elements.waveformDisplay.style.display = 'none';
-            elements.circleOfFifths.style.display = 'none';
-        } else if (buttons.toggleWaveform.classList.contains('active')) {
-            elements.pianoContainer.style.display = 'none';
-            elements.waveformDisplay.style.display = 'flex';
-            elements.circleOfFifths.style.display = 'none';
-        } else if (buttons.toggleCircle.classList.contains('active')) {
-            elements.pianoContainer.style.display = 'none';
-            elements.waveformDisplay.style.display = 'none';
-            elements.circleOfFifths.style.display = 'flex';
+    if (!visualizationArea) return;
+
+    // Set explicit display property
+    visualizationArea.style.display = 'block';
+
+    // Make sure visualization containers have proper dimensions and visibility
+    const containers = [
+        elements.pianoContainer,
+        elements.waveformDisplay,
+        elements.circleOfFifths
+    ].filter(c => c); // Filter out null elements
+
+    containers.forEach(container => {
+        // Ensure container is visible even if not currently active
+        container.style.opacity = '1';
+
+        // Make sure hidden class only affects display, not other properties
+        if (container.classList.contains('hidden')) {
+            container.style.display = 'none';
         } else {
-            // Default to piano view if nothing is active
-            buttons.togglePiano.classList.add('active');
-            elements.pianoContainer.style.display = 'flex';
+            container.style.display = 'flex';
         }
-        
-        // Create or update waveform canvas if needed
+    });
+
+    // Force active visualization to be visible (with null checks)
+    const pianoActive = buttons.togglePiano && buttons.togglePiano.classList.contains('active');
+    const waveformActive = buttons.toggleWaveform && buttons.toggleWaveform.classList.contains('active');
+    const circleActive = buttons.toggleCircle && buttons.toggleCircle.classList.contains('active');
+
+    if (pianoActive) {
+        if (elements.pianoContainer) elements.pianoContainer.style.display = 'flex';
+        if (elements.waveformDisplay) elements.waveformDisplay.style.display = 'none';
+        if (elements.circleOfFifths) elements.circleOfFifths.style.display = 'none';
+    } else if (waveformActive) {
+        if (elements.pianoContainer) elements.pianoContainer.style.display = 'none';
+        if (elements.waveformDisplay) elements.waveformDisplay.style.display = 'flex';
+        if (elements.circleOfFifths) elements.circleOfFifths.style.display = 'none';
+    } else if (circleActive) {
+        if (elements.pianoContainer) elements.pianoContainer.style.display = 'none';
+        if (elements.waveformDisplay) elements.waveformDisplay.style.display = 'none';
+        if (elements.circleOfFifths) elements.circleOfFifths.style.display = 'flex';
+    } else {
+        // Default to piano view if nothing is active
+        if (buttons.togglePiano) buttons.togglePiano.classList.add('active');
+        if (elements.pianoContainer) elements.pianoContainer.style.display = 'flex';
+    }
+
+    // Create or update waveform canvas if needed
+    if (elements.waveformDisplay) {
         if (!elements.waveformDisplay.querySelector('canvas')) {
             const canvas = document.createElement('canvas');
-            canvas.width = elements.waveformDisplay.clientWidth;
-            canvas.height = elements.waveformDisplay.clientHeight;
+            canvas.width = elements.waveformDisplay.clientWidth || 300;
+            canvas.height = elements.waveformDisplay.clientHeight || 150;
             elements.waveformDisplay.appendChild(canvas);
         } else {
             const canvas = elements.waveformDisplay.querySelector('canvas');
-            canvas.width = elements.waveformDisplay.clientWidth;
-            canvas.height = elements.waveformDisplay.clientHeight;
+            canvas.width = elements.waveformDisplay.clientWidth || 300;
+            canvas.height = elements.waveformDisplay.clientHeight || 150;
         }
     }
 }
 
 // Start the game
 function startGame() {
+    log('info', 'Starting game');
+
     // Initialize audio context
     if (!audioContext) {
         try {
@@ -203,12 +264,13 @@ function startGame() {
             masterGainNode = audioContext.createGain();
             masterGainNode.gain.value = 0.3; // Default volume
             masterGainNode.connect(audioContext.destination);
+            log('info', 'Audio context initialized');
         } catch (e) {
-            console.error('Web Audio API is not supported in this browser', e);
+            log('error', 'Web Audio API is not supported in this browser', e);
             alert('Your browser does not support the Web Audio API. Some features may not work properly.');
         }
     }
-    
+
     // Reset game state
     gameState.level = 1;
     gameState.score = 0;
@@ -216,23 +278,27 @@ function startGame() {
     gameState.bestStreak = 0;
     gameState.challengeCount = 0;
     gameState.selectedOption = null;
-    
+
     // Reset category stats
     Object.keys(gameState.categoryStats).forEach(category => {
         gameState.categoryStats[category] = { correct: 0, total: 0 };
     });
-    
-    // Update UI
-    elements.level.textContent = gameState.level;
-    elements.score.textContent = gameState.score;
-    elements.streak.textContent = gameState.streak;
-    
+
+    // Update UI safely
+    if (elements.level) elements.level.textContent = gameState.level;
+    if (elements.score) elements.score.textContent = gameState.score;
+    if (elements.streak) elements.streak.textContent = gameState.streak;
+
     // Switch to game screen
     switchScreen('game');
-    
+
     // Generate first challenge
-    generateChallenge();
-    
+    try {
+        generateChallenge();
+    } catch (err) {
+        log('error', `Failed to generate challenge: ${err.message}`, err);
+    }
+
     // Fix visualization display
     fixVisualizationDisplay();
 }
