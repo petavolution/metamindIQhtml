@@ -1,76 +1,88 @@
-/* Specific styles for the Expand Vision module */
+/**
+ * Expand Vision Module - Specific Styles
+ * Extends styles.css with module-specific styles
+ */
 
-/* Vision container layout */
+/* Vision Container */
 .vision-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 400px;
+    min-height: 400px;
     position: relative;
-    margin: 2rem 0;
+    margin: var(--spacing-lg) 0;
 }
 
-/* Oval container and oval */
 .oval-container {
     position: relative;
     width: 100%;
-    height: 100%;
+    max-width: 600px;
+    height: 400px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
+/* Focus Oval */
 .oval {
-    background-color: transparent;
-    border: 2px solid var(--primary-color);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    transition: width 0.5s ease, height 0.5s ease;
     width: 30px;
     height: 30px;
-}
-
-/* Focus point (red dot) */
-#focus-point {
-    width: 6px;
-    height: 6px;
-    background-color: red;
+    border: 3px solid var(--color-primary);
     border-radius: 50%;
-    position: absolute;
-    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: width 0.3s ease, height 0.3s ease,
+                border-color var(--transition-normal);
+    position: relative;
+    box-shadow: 0 0 15px rgba(0, 120, 255, 0.4);
 }
 
-/* Central content (word or image) */
+.oval.phase-preparation {
+    border-color: var(--color-primary);
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.oval.phase-active {
+    border-color: var(--color-success);
+    box-shadow: 0 0 15px rgba(0, 180, 100, 0.4);
+}
+
+/* Central Content */
 #central-content {
-    color: var(--text-color);
     font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--text-secondary);
     text-align: center;
     position: absolute;
     z-index: 1;
 }
 
-/* Phase text indicator */
-.phase-text {
-    text-align: center;
-    font-size: 1.2rem;
-    margin: 0.5rem 0;
-    color: var(--text-secondary);
-    transition: opacity 0.3s;
+/* Focus Point */
+#focus-point {
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-error);
+    border-radius: 50%;
+    position: absolute;
+    z-index: 2;
+    box-shadow: 0 0 10px var(--color-error);
 }
 
-/* Peripheral numbers */
+/* Peripheral Numbers */
 .peripheral-number {
     position: absolute;
     font-size: 1.5rem;
     font-weight: bold;
     z-index: 3;
     opacity: 0;
-    transition: opacity 0.3s ease, top 0.5s ease, left 0.5s ease, right 0.5s ease, bottom 0.5s ease;
+    transition: opacity var(--transition-normal),
+                top var(--transition-slow),
+                left var(--transition-slow),
+                right var(--transition-slow),
+                bottom var(--transition-slow);
 }
 
 .peripheral-number.visible {
@@ -105,13 +117,13 @@
     color: rgba(120, 120, 255, 1);
 }
 
-/* Sum calculation prompt */
+/* Sum Calculation */
 .sum-container {
-    margin-top: 2rem;
+    margin-top: var(--spacing-lg);
     text-align: center;
     font-size: 1.2rem;
     opacity: 0;
-    transition: opacity 0.5s ease;
+    transition: opacity var(--transition-slow);
 }
 
 .sum-container.visible {
@@ -119,59 +131,35 @@
 }
 
 .sum-result {
-    margin-top: 1rem;
+    margin-top: var(--spacing-sm);
     font-weight: bold;
     font-size: 1.4rem;
-    color: var(--success-color);
+    color: var(--color-success);
     opacity: 0;
-    transition: opacity 0.5s ease;
+    transition: opacity var(--transition-slow);
 }
 
 .sum-result.visible {
     opacity: 1;
 }
 
-/* Controls */
-.controls {
-    margin-top: 2rem;
-    text-align: center;
-    font-size: 0.9rem;
-    color: rgba(180, 180, 180, 0.8);
-}
-
-/* Phase styles */
-.phase-preparation .oval {
-    border-color: rgba(0, 120, 255, 0.8);
-    box-shadow: 0 0 15px rgba(0, 120, 255, 0.4);
-}
-
-.phase-active .oval {
-    border-color: rgba(0, 180, 100, 0.8);
-    box-shadow: 0 0 15px rgba(0, 180, 100, 0.4);
-}
-
-/* Animations */
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
-
-.phase-preparation .oval {
-    animation: pulse 2s infinite ease-in-out;
-}
-
-/* Responsive design */
+/* Responsive */
 @media (max-width: 768px) {
     .vision-container {
+        min-height: 300px;
+    }
+
+    .oval-container {
         height: 300px;
     }
-    
+
     .peripheral-number {
         font-size: 1.2rem;
     }
-    
-    .phase-text {
-        font-size: 1rem;
+}
+
+@media (max-width: 480px) {
+    .oval-container {
+        height: 250px;
     }
-} 
+}

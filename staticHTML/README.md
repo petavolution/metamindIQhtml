@@ -1,85 +1,96 @@
-# MetaMindIQTrain - Static HTML Versions
+# MetaMindIQTrain - Static HTML Modules
 
-This directory contains web-based versions of the MetaMindIQTrain cognitive training modules. These static HTML versions can be deployed on any web server without needing Python or PyGame.
+Web-based cognitive training modules. Zero dependencies, deployable anywhere.
 
-## Contents
-
-- **index.html** - Main landing page with links to all modules
-- **styles.css** - Shared styles for all modules
-- **morph_matrix.html/.css/.js** - Morph Matrix training module
-- **expand_vision.html/.css/.js** - Expand Vision training module
-- **symbol_memory.html/.css/.js** - Symbol Memory training module
-
-## How to Use
-
-### Local Testing
-
-1. You can open the HTML files directly in your browser for local testing
-2. For better security, run a local web server:
+## Quick Start
 
 ```bash
-# Using Python's built-in HTTP server
-python -m http.server
+# Option 1: Open index.html directly in browser
 
-# Or using Node.js with http-server
-npx http-server
+# Option 2: Run local server
+python -m http.server 8000
+# Then visit http://localhost:8000
 ```
 
-### Deployment
+## Project Structure
 
-These files can be deployed to any static web hosting service, such as:
+```
+staticHTML/
+├── index.html              # Landing page
+├── core.js                 # Shared utilities (audio, timers, state, DOM)
+├── styles.css              # Shared CSS (theme, layout, components)
+│
+├── Visual Cognition Modules
+│   ├── symbol_memory.*     # Visual memory training
+│   ├── morph_matrix.*      # Pattern recognition training
+│   ├── expand_vision.*     # Peripheral awareness training
+│   └── neural_synthesis.*  # Cross-modal integration
+│
+└── Audio/Rhythm Modules
+    ├── music_theory.*      # Music theory training
+    └── psychoacoustic_wizard.*  # Rhythm/timing training
+```
 
-- GitHub Pages
-- Netlify
-- Vercel
-- Amazon S3
-- Any standard web hosting service
+## Modules
 
-Simply upload all the files in this directory to your hosting service.
+### Visual Cognition
 
-## Module Features
+| Module | Purpose | Skills Trained |
+|--------|---------|----------------|
+| **Symbol Memory** | Memorize symbol patterns, detect changes | Working memory, attention |
+| **Morph Matrix** | Identify rotations vs modifications | Spatial reasoning, mental rotation |
+| **Expand Vision** | Track peripheral numbers | Peripheral awareness, divided attention |
+| **Neural Synthesis** | Match visual-audio patterns | Cross-modal integration |
 
-### Morph Matrix
+### Audio/Rhythm
 
-- Trains pattern recognition and spatial reasoning
-- Features a matrix-based challenge with rotated patterns
-- Identifies spatial reasoning skills and attention to detail
-- Uses bright red and green cells on a dark background for visual clarity
+| Module | Purpose | Skills Trained |
+|--------|---------|----------------|
+| **Music Theory** | Identify scales, intervals, chords | Ear training, musical cognition |
+| **Psychoacoustic Wizard** | Hit notes in time | Rhythm, timing precision |
 
-### Expand Vision
+## Architecture
 
-- Improves peripheral vision and multi-focal attention
-- Features an expanding oval with a central focus point
-- Displays random numbers in the peripheral vision
-- Challenges users to calculate sums while maintaining central focus
+### core.js - Shared Utilities
 
-### Symbol Memory
+```javascript
+MetaMind.Audio      // Web Audio API wrapper
+MetaMind.Screens    // Screen transitions
+MetaMind.Timer      // Countdown and delay timers
+MetaMind.DOM        // DOM manipulation helpers
+MetaMind.MathUtils  // Random, shuffle, clamp, lerp
+MetaMind.Storage    // localStorage wrapper
+MetaMind.Colors     // Theme colors and palettes
+```
 
-- Enhances short-term memory and attention to detail
-- Features patterns of symbols to memorize
-- Displays colorful symbols in a grid that users must remember
-- Challenges users to identify if and where a symbol was changed
-- Provides immediate feedback on correctness
-- Increases in difficulty as levels progress
+### styles.css - CSS Variables
+
+```css
+--bg-primary        /* Main background */
+--color-success     /* Correct answer feedback */
+--color-error       /* Wrong answer feedback */
+--color-primary     /* Interactive elements */
+--transition-normal /* Standard animation speed */
+```
 
 ## Customization
 
-You can customize these modules by editing the CSS files:
+1. **Colors**: Edit `:root` variables in `styles.css`
+2. **Timing**: Adjust `memoryTime`, `delay` in module JS files
+3. **Difficulty**: Modify `gridSize`, `level` progression logic
 
-- Change colors in the `:root` variables in `styles.css`
-- Adjust dimensions and timing in the respective module CSS files
-- Modify difficulty settings in the JavaScript files
+## Browser Support
 
-## Browser Compatibility
+- Chrome/Edge 80+
+- Firefox 75+
+- Safari 13+
 
-These modules are designed to work in modern browsers:
+## Deployment
 
-- Chrome/Edge (latest versions)
-- Firefox (latest versions)
-- Safari (latest versions)
+Works with any static host:
+- GitHub Pages
+- Netlify / Vercel
+- AWS S3
+- Any web server
 
-For the best experience, use a desktop or laptop computer with a modern browser.
-
-## License
-
-These files are part of the MetaMindIQTrain project and follow the same licensing terms as the main project. 
+Just upload all files maintaining the directory structure.
