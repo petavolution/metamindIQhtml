@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expand Vision Training</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="expand_vision.css">
+</head>
+<body>
+    <div class="container">
+        <div id="start-screen" class="screen">
+            <h1>Expand Vision Training</h1>
+            <div class="instructions">
+                <p>This exercise trains your peripheral vision and awareness.</p>
+                <p>1. Focus on the center point (red dot) at all times</p>
+                <p>2. Notice the numbers that appear in your peripheral vision</p>
+                <p>3. Try to calculate the sum of all numbers when prompted</p>
+                <p>4. The numbers will move further away as you progress</p>
+            </div>
+            <button id="start-button" class="button">Start Training</button>
+        </div>
+
+        <div id="game-screen" class="screen hidden">
+            <h1>Expand Vision Training</h1>
+            <div class="stats">
+                <div class="round">Round: <span id="round">0</span>/<span id="total-rounds">25</span></div>
+                <div class="timer">Time: <span id="time-remaining">0</span>s</div>
+            </div>
+            
+            <div id="phase-text" class="phase-text">Focus on the center</div>
+            
+            <div class="vision-container">
+                <div class="oval-container">
+                    <div id="focus-oval" class="oval">
+                        <div id="central-content"></div>
+                        <div id="focus-point" class="hidden"></div>
+                    </div>
+                    <div id="number-top" class="peripheral-number hidden"></div>
+                    <div id="number-right" class="peripheral-number hidden"></div>
+                    <div id="number-bottom" class="peripheral-number hidden"></div>
+                    <div id="number-left" class="peripheral-number hidden"></div>
+                </div>
+                
+                <div id="sum-prompt" class="sum-container hidden">
+                    <p>Calculate the sum of all numbers</p>
+                    <div id="sum-result" class="sum-result hidden">Sum: <span id="sum-value">0</span></div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <p>Press SPACE to restart the exercise</p>
+            </div>
+        </div>
+
+        <div id="complete-screen" class="screen hidden">
+            <h1>Training Complete!</h1>
+            <p>You have completed the Expand Vision training session.</p>
+            <div class="results">
+                <p>You completed <span id="completed-rounds">0</span> rounds of training.</p>
+                <p>This has helped expand your peripheral awareness and vision.</p>
+                <p>Your peripheral vision should now be more sensitive to changes at greater distances.</p>
+            </div>
+            <button id="restart-button" class="button">Train Again</button>
+        </div>
+    </div>
+
+    <script src="expand_vision.js"></script>
+</body>
+</html> 

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morph Matrix Training</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="morph_matrix.css">
+</head>
+<body>
+    <div class="container">
+        <div id="start-screen" class="screen">
+            <h1>Morph Matrix Training</h1>
+            <div class="instructions">
+                <p>The ORIGINAL PATTERN is shown at the top center with a blue outline.</p>
+                <p>Select all patterns that are EXACT ROTATIONS of the original pattern.</p>
+                <p>Avoid patterns that have had cells changed.</p>
+                <p>Click on a pattern to select/deselect it.</p>
+                <p>Press the Check Answers button when ready.</p>
+            </div>
+            <button id="start-button" class="button">Start Challenge</button>
+        </div>
+
+        <div id="game-screen" class="screen hidden">
+            <h1>Morph Matrix Training</h1>
+            <div class="stats">
+                <div class="level">Level: <span id="level">1</span></div>
+                <div class="score">Score: <span id="score">0</span></div>
+            </div>
+            <p class="instruction">Select all patterns that are exact rotations of the original pattern</p>
+            
+            <div class="patterns-container">
+                <!-- Top Row -->
+                <div class="patterns-row">
+                    <div class="pattern-container" id="pattern1">
+                        <div class="pattern-label">PATTERN 2</div>
+                        <div class="pattern"></div>
+                    </div>
+                    <div class="pattern-container original" id="pattern0">
+                        <div class="pattern-label">ORIGINAL PATTERN</div>
+                        <div class="pattern"></div>
+                    </div>
+                    <div class="pattern-container" id="pattern2">
+                        <div class="pattern-label">PATTERN 3</div>
+                        <div class="pattern"></div>
+                    </div>
+                </div>
+                
+                <!-- Bottom Row -->
+                <div class="patterns-row">
+                    <div class="pattern-container" id="pattern3">
+                        <div class="pattern-label">PATTERN 4</div>
+                        <div class="pattern"></div>
+                    </div>
+                    <div class="pattern-container" id="pattern4">
+                        <div class="pattern-label">PATTERN 5</div>
+                        <div class="pattern"></div>
+                    </div>
+                    <div class="pattern-container" id="pattern5">
+                        <div class="pattern-label">PATTERN 6</div>
+                        <div class="pattern"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="check-button" class="button">Check Answers</button>
+        </div>
+
+        <div id="results-screen" class="screen hidden">
+            <h1>Results</h1>
+            <div class="score-display">Score: <span id="final-score">0</span></div>
+            
+            <div class="patterns-container">
+                <!-- Top Row -->
+                <div class="patterns-row">
+                    <div class="pattern-container" id="result-pattern1">
+                        <div class="pattern"></div>
+                        <div class="result-label"></div>
+                    </div>
+                    <div class="pattern-container original" id="result-pattern0">
+                        <div class="pattern"></div>
+                        <div class="result-label">ORIGINAL PATTERN</div>
+                    </div>
+                    <div class="pattern-container" id="result-pattern2">
+                        <div class="pattern"></div>
+                        <div class="result-label"></div>
+                    </div>
+                </div>
+                
+                <!-- Bottom Row -->
+                <div class="patterns-row">
+                    <div class="pattern-container" id="result-pattern3">
+                        <div class="pattern"></div>
+                        <div class="result-label"></div>
+                    </div>
+                    <div class="pattern-container" id="result-pattern4">
+                        <div class="pattern"></div>
+                        <div class="result-label"></div>
+                    </div>
+                    <div class="pattern-container" id="result-pattern5">
+                        <div class="pattern"></div>
+                        <div class="result-label"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="next-button" class="button">Next Challenge</button>
+        </div>
+    </div>
+
+    <script src="morph_matrix.js"></script>
+</body>
+</html> 

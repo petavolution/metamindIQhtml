@@ -1,0 +1,143 @@
+/* Specific styles for the Morph Matrix module */
+
+/* Pattern container layouts */
+.patterns-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 40px;
+}
+
+.patterns-row {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.pattern-container {
+    position: relative;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.pattern-label {
+    position: absolute;
+    top: -30px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.result-label {
+    position: absolute;
+    bottom: -30px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+/* Original pattern special styling */
+.pattern-container.original {
+    position: relative;
+}
+
+.pattern-container.original:before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border: 5px solid var(--primary-color);
+    z-index: 0;
+}
+
+.pattern-container.original .pattern-label {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+/* The actual pattern matrix */
+.pattern {
+    display: grid;
+    grid-template-columns: repeat(5, 30px); /* Default 5x5 grid */
+    grid-template-rows: repeat(5, 30px);
+    background-color: #282c34;
+    border: 2px solid rgba(140, 140, 160, 0.8);
+    position: relative;
+    z-index: 1;
+}
+
+/* Selected pattern highlight */
+.pattern-container.selected .pattern:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--highlight-color);
+    z-index: 2;
+}
+
+/* Matrix cells */
+.cell {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #282832;
+}
+
+.cell.filled {
+    background-color: rgb(255, 30, 30); /* Bright red for filled cells */
+}
+
+.cell.empty {
+    background-color: rgb(30, 255, 30); /* Bright green for empty cells */
+}
+
+/* Results screen styling */
+.result-label.correct {
+    color: var(--success-color);
+    font-weight: bold;
+}
+
+.result-label.incorrect {
+    color: var(--error-color);
+    font-weight: bold;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .patterns-row {
+        gap: 20px;
+    }
+    
+    .pattern {
+        grid-template-columns: repeat(5, 25px);
+        grid-template-rows: repeat(5, 25px);
+    }
+    
+    .cell {
+        width: 25px;
+        height: 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    .patterns-row {
+        flex-direction: column;
+    }
+    
+    .pattern-container.original:before {
+        top: -6px;
+        left: -6px;
+        right: -6px;
+        bottom: -6px;
+        border: 3px solid var(--primary-color);
+    }
+} 

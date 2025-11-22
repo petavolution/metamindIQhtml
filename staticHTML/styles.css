@@ -1,0 +1,128 @@
+/* Common styles for all training modules */
+:root {
+    /* Color Variables */
+    --bg-color: #14191f; /* Dark blue-black background */
+    --text-color: #f0f0f0; /* Bright text */
+    --button-color: #3c3c46; /* Darker button for dark theme */
+    --button-hover-color: #4a4a56; /* Lighter when hovering */
+    --button-text-color: #f0f0f0; /* White text on buttons */
+    --highlight-color: rgba(255, 255, 0, 0.4); /* Yellow with transparency */
+    --success-color: #32ff32; /* Bright green */
+    --error-color: #ff3232; /* Bright red */
+    --primary-color: #0078ff; /* Bright blue for primary elements */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.6;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: var(--text-color);
+}
+
+.screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-height: 80vh;
+}
+
+.hidden {
+    display: none;
+}
+
+.button {
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+    border: 2px solid rgba(100, 100, 120, 0.8);
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 2rem;
+    transition: background-color 0.3s, transform 0.2s;
+    font-weight: bold;
+}
+
+.button:hover {
+    background-color: var(--button-hover-color);
+    transform: scale(1.05);
+}
+
+.instructions {
+    text-align: center;
+    max-width: 600px;
+    margin: 2rem auto;
+}
+
+.instructions p {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+}
+
+.score-display {
+    font-size: 1.5rem;
+    margin: 1rem 0 2rem;
+    font-weight: bold;
+}
+
+.instruction {
+    margin-bottom: 2rem;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .stats {
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .button {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+    
+    .instructions p {
+        font-size: 0.9rem;
+    }
+} 

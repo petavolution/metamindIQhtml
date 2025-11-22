@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Synthesis - MetaMind IQ Train</title>
+    <style>
+        :root {
+            --background-color: #f0f0f5;
+            --panel-color: #ffffff;
+            --text-color: #3c3c50;
+            --highlight-color: #4682f0;
+            --success-color: #64c864;
+            --error-color: #f05a5a;
+            --neutral-color: #c8c8c8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-color);
+        }
+
+        header {
+            width: 100%;
+            background-color: var(--panel-color);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            color: var(--highlight-color);
+            font-size: 2em;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .info-panel {
+            background-color: var(--panel-color);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .level-display {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .score-display {
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .phase-display {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--highlight-color);
+            text-align: right;
+        }
+
+        .grid-panel {
+            background-color: var(--panel-color);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            min-height: 400px;
+        }
+
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 8px;
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 1/1;
+        }
+
+        .grid-cell {
+            background-color: var(--neutral-color);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .grid-cell:hover {
+            opacity: 0.8;
+        }
+
+        .feedback-panel {
+            background-color: var(--panel-color);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2em;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-panel {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .start-button {
+            background-color: var(--highlight-color);
+            color: white;
+        }
+
+        .start-button:hover {
+            background-color: #5a90f2;
+        }
+
+        .reset-button {
+            background-color: var(--error-color);
+            color: white;
+        }
+
+        .reset-button:hover {
+            background-color: #f27878;
+        }
+
+        .neutral {
+            color: var(--text-color);
+        }
+
+        .success {
+            color: var(--success-color);
+        }
+
+        .error {
+            color: var(--error-color);
+        }
+
+        /* Note colors */
+        .note-c { background-color: #ff4b4b; } /* C - Red */
+        .note-d { background-color: #ffa54b; } /* D - Orange */
+        .note-e { background-color: #ffe14b; } /* E - Yellow */
+        .note-f { background-color: #7dff4b; } /* F - Green */
+        .note-g { background-color: #4bafff; } /* G - Light Blue */
+        .note-h { background-color: #874bff; } /* A - Purple */
+        .note-i { background-color: #ff4be1; } /* B - Pink */
+
+        @media (max-width: 600px) {
+            .info-panel {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .phase-display {
+                text-align: center;
+            }
+
+            .control-panel {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Neural Synthesis</h1>
+    </header>
+
+    <div class="container">
+        <div class="info-panel">
+            <div class="level-display">Level: 1/10</div>
+            <div class="score-display">Score: 0</div>
+            <div class="phase-display">Ready</div>
+        </div>
+
+        <div class="grid-panel">
+            <div class="pattern-grid" id="pattern-grid">
+                <!-- Grid cells will be generated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="feedback-panel">
+            <p id="feedback-message" class="neutral">Press Start to begin training</p>
+        </div>
+
+        <div class="control-panel">
+            <button id="start-button" class="start-button">Start</button>
+            <button id="reset-button" class="reset-button">Reset</button>
+        </div>
+    </div>
+
+    <script>
+        // Neural Synthesis Module Implementation
+        class NeuralSynthesis {
+            constructor() {
+                // Configuration
+                this.gridSize = 5;
+                this.maxLevel = 10;
+                this.maxRounds = 3;
+                this.currentSequenceLength = 3; // Starting sequence length
+                this.maxElements = 7; // Maximum number of distinct elements
+
+                // State
+                this.state = {
+                    phase: 'ready', // ready, observation, reproduction, feedback, complete
+                    score: 0,
+                    level: 1,
+                    round: 0,
+                    currentPattern: null,
+                    userSequence: []
+                };
+
+                // Audio context
+                this.audioCtx = null;
+                this.gainNode = null;
+
+                // Note frequencies (C4 through B4)
+                this.NOTE_FREQUENCIES = {
+                    'C': 261.63,
+                    'D': 293.66,
+                    'E': 329.63,
+                    'F': 349.23,
+                    'G': 392.00,
+                    'A': 440.00,
+                    'B': 493.88
+                };
+
+                // Color mapping for grid cells
+                this.noteColors = [
+                    'note-c', // C - Red
+                    'note-d', // D - Orange
+                    'note-e', // E - Yellow
+                    'note-f', // F - Green
+                    'note-g', // G - Light Blue
+                    'note-h', // A - Purple
+                    'note-i'  // B - Pink
+                ];
+
+                // Timing information
+                this.elementDisplayDuration = 1000; // ms
+                this.interElementDelay = 300; // ms
+
+                // Setup UI elements
+                this.setupUI();
+
+                // Initialize audio
+                this.initAudio();
+            }
+
+            setupUI() {
+                // Create grid
+                this.createGrid();
+
+                // Set up event listeners
+                document.getElementById('start-button').addEventListener('click', () => this.onStartClick());
+                document.getElementById('reset-button').addEventListener('click', () => this.onResetClick());
+
+                // Update UI from initial state
+                this.updateUI();
+            }
+
+            createGrid() {
+                const grid = document.getElementById('pattern-grid');
+                grid.innerHTML = ''; // Clear existing grid
+                grid.style.gridTemplateColumns = `repeat(${this.gridSize}, 1fr)`;
+                grid.style.gridTemplateRows = `repeat(${this.gridSize}, 1fr)`;
+
+                // Create cells
+                for (let row = 0; row < this.gridSize; row++) {
+                    for (let col = 0; col < this.gridSize; col++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'grid-cell';
+                        cell.dataset.row = row;
+                        cell.dataset.col = col;
+                        cell.addEventListener('click', (e) => this.onCellClick(e));
+                        grid.appendChild(cell);
+                    }
+                }
+            }
+
+            initAudio() {
+                try {
+                    // Create audio context
+                    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                    this.audioCtx = new AudioContext();
+                    
+                    // Create gain node for volume control
+                    this.gainNode = this.audioCtx.createGain();
+                    this.gainNode.gain.value = 0.3; // Set volume to 30%
+                    this.gainNode.connect(this.audioCtx.destination);
+                } catch (e) {
+                    console.error('Web Audio API is not supported in this browser', e);
+                }
+            }
+
+            onStartClick() {
+                if (this.state.phase === 'ready') {
+                    // Start the first pattern
+                    this.startTraining();
+                } else if (this.state.phase === 'feedback') {
+                    // Start the next pattern
+                    this.startNextPattern();
+                } else if (this.state.phase === 'complete') {
+                    // Reset and start again
+                    this.resetState();
+                    this.startTraining();
+                }
+            }
+
+            onResetClick() {
+                this.resetState();
+                this.updateUI();
+            }
+
+            onCellClick(event) {
+                if (this.state.phase !== 'reproduction') {
+                    return;
+                }
+
+                const cell = event.target;
+                const row = parseInt(cell.dataset.row);
+                const col = parseInt(cell.dataset.col);
+                
+                // Get the visual element from grid position
+                const visualElement = row * this.gridSize + col;
+                
+                // Find matching audio element
+                let audioElement = 'C'; // Default
+                if (this.state.currentPattern && this.state.currentPattern.sequence) {
+                    // Try to find the paired audio element
+                    for (const [visual, audio] of this.state.currentPattern.sequence) {
+                        if (visual === visualElement) {
+                            audioElement = audio;
+                            break;
+                        }
+                    }
+                }
+                
+                // Record user selection
+                this.state.userSequence.push([visualElement, audioElement]);
+                
+                // Highlight cell and play sound
+                this.highlightCell(row, col, this.getColorIndexForElement(visualElement));
+                this.playNote(audioElement);
+                
+                // Check if sequence is complete
+                if (this.state.currentPattern && 
+                    this.state.userSequence.length >= this.state.currentPattern.sequence.length) {
+                    setTimeout(() => this.evaluatePerformance(), 300);
+                }
+            }
+
+            startTraining() {
+                // Set state to observation
+                this.state.phase = 'observation';
+                this.updateFeedback('Observe the pattern...', 'neutral');
+                this.updateUI();
+                
+                // Start first pattern
+                this.startNextPattern();
+            }
+
+            startNextPattern() {
+                // Generate a pattern with appropriate difficulty
+                const pattern = this.generatePattern();
+                
+                // Store current pattern
+                this.state.currentPattern = pattern;
+                this.state.userSequence = [];
+                
+                // Set state
+                this.state.phase = 'observation';
+                this.updateFeedback('Observe the pattern...', 'neutral');
+                
+                // Start showing the pattern
+                this.showPattern(pattern);
+            }
+
+            generatePattern() {
+                // Calculate appropriate difficulty based on level
+                const numElements = Math.min(this.maxElements, Math.max(3, Math.floor(2 + this.state.level / 2)));
+                const sequenceLength = Math.max(3, Math.min(7, 2 + this.state.level));
+                
+                // Generate sequence
+                const sequence = [];
+                const notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+                
+                // Create visual elements and map to audio elements
+                for (let i = 0; i < sequenceLength; i++) {
+                    const visualElement = Math.floor(Math.random() * (this.gridSize * this.gridSize));
+                    const audioElement = notes[Math.floor(Math.random() * notes.length)];
+                    sequence.push([visualElement, audioElement]);
+                }
+                
+                // Calculate display time based on level (more time for longer sequences)
+                const displayTime = (1000 + (sequenceLength * 300)) * Math.max(0.5, (11 - this.state.level) / 10);
+                
+                return {
+                    sequence,
+                    sequenceLength,
+                    numElements,
+                    displayTime
+                };
+            }
+
+            showPattern(pattern) {
+                const sequence = pattern.sequence;
+                const displayDuration = this.elementDisplayDuration;
+                const delayBetween = this.interElementDelay;
+                
+                // Clear grid first
+                this.clearGrid();
+                
+                // Show each element in the sequence with timing
+                sequence.forEach(([visualElement, audioElement], index) => {
+                    // Calculate the row and column from the visualElement
+                    const row = Math.floor(visualElement / this.gridSize);
+                    const col = visualElement % this.gridSize;
+                    
+                    // Wait appropriate time then show
+                    const totalDelay = index * (displayDuration + delayBetween);
+                    
+                    setTimeout(() => {
+                        // Show element
+                        this.highlightCell(row, col, this.getColorIndexForElement(visualElement));
+                        this.playNote(audioElement);
+                        
+                        // Hide after duration
+                        setTimeout(() => {
+                            this.clearGrid();
+                            
+                            // If this was the last element, start reproduction phase
+                            if (index === sequence.length - 1) {
+                                setTimeout(() => this.startReproductionPhase(), delayBetween);
+                            }
+                        }, displayDuration);
+                    }, totalDelay);
+                });
+            }
+
+            startReproductionPhase() {
+                // Update state
+                this.state.phase = 'reproduction';
+                this.updateFeedback('Reproduce the pattern...', 'neutral');
+                this.updateUI();
+                
+                // Set a timeout for the reproduction phase
+                const pattern = this.state.currentPattern;
+                if (pattern && pattern.displayTime) {
+                    const timeout = pattern.displayTime * 2; // Allow twice the display time
+                    this.reproductionTimeout = setTimeout(() => {
+                        if (this.state.phase === 'reproduction') {
+                            this.evaluatePerformance();
+                        }
+                    }, timeout);
+                }
+            }
+
+            evaluatePerformance() {
+                // Clear any existing timeout
+                if (this.reproductionTimeout) {
+                    clearTimeout(this.reproductionTimeout);
+                }
+                
+                const pattern = this.state.currentPattern;
+                const userSequence = this.state.userSequence;
+                
+                // Calculate accuracy
+                const targetSequence = pattern.sequence;
+                let correctCount = 0;
+                for (let i = 0; i < Math.min(userSequence.length, targetSequence.length); i++) {
+                    if (JSON.stringify(userSequence[i]) === JSON.stringify(targetSequence[i])) {
+                        correctCount++;
+                    }
+                }
+                
+                const accuracy = targetSequence.length ? correctCount / targetSequence.length : 0;
+                
+                // Update score based on accuracy
+                if (accuracy >= 0.8) {
+                    this.state.score += 10 * this.state.level * accuracy;
+                    this.updateFeedback("Excellent! Pattern correctly reproduced.", 'success');
+                } else if (accuracy >= 0.5) {
+                    this.state.score += 5 * this.state.level * accuracy;
+                    this.updateFeedback("Good attempt. Some elements were correct.", 'neutral');
+                } else {
+                    this.updateFeedback("Try again. Focus on both visual and auditory elements.", 'error');
+                }
+                
+                // Update phase
+                this.state.phase = 'feedback';
+                
+                // Advance round
+                this.state.round++;
+                if (this.state.round >= this.maxRounds) {
+                    this.state.round = 0;
+                    
+                    // Advance level if performance is good enough
+                    if (accuracy >= 0.7) {
+                        this.state.level = Math.min(this.state.level + 1, this.maxLevel);
+                        
+                        // If reached max level and good accuracy, complete
+                        if (this.state.level === this.maxLevel && accuracy >= 0.8) {
+                            this.state.phase = 'complete';
+                            this.updateFeedback("Congratulations! You've completed all levels.", 'success');
+                        }
+                    }
+                }
+                
+                // Update UI
+                this.updateUI();
+            }
+
+            highlightCell(row, col, colorIndex = 0) {
+                // Find the cell
+                const cells = document.querySelectorAll('.grid-cell');
+                const cellIndex = row * this.gridSize + col;
+                
+                if (cellIndex < cells.length) {
+                    // Clear any existing highlights
+                    this.clearGrid();
+                    
+                    // Add the appropriate color class
+                    cells[cellIndex].classList.add(this.noteColors[colorIndex % this.noteColors.length]);
+                }
+            }
+
+            clearGrid() {
+                const cells = document.querySelectorAll('.grid-cell');
+                cells.forEach(cell => {
+                    // Remove all note color classes
+                    this.noteColors.forEach(colorClass => {
+                        cell.classList.remove(colorClass);
+                    });
+                });
+            }
+
+            playNote(note) {
+                if (!this.audioCtx) {
+                    return;
+                }
+                
+                try {
+                    // Resume audio context if it was suspended
+                    if (this.audioCtx.state === 'suspended') {
+                        this.audioCtx.resume();
+                    }
+                    
+                    // Get frequency for the note
+                    const freq = this.NOTE_FREQUENCIES[note] || 440; // Default to A
+                    
+                    // Create oscillator
+                    const oscillator = this.audioCtx.createOscillator();
+                    oscillator.type = 'sine';
+                    oscillator.frequency.value = freq;
+                    
+                    // Connect to gain node and start
+                    oscillator.connect(this.gainNode);
+                    oscillator.start();
+                    
+                    // Stop after 300ms
+                    setTimeout(() => {
+                        oscillator.stop();
+                    }, 300);
+                } catch (e) {
+                    console.error('Error playing sound:', e);
+                }
+            }
+
+            getColorIndexForElement(element) {
+                // Simple mapping from element to color index
+                return element % this.noteColors.length;
+            }
+
+            updateFeedback(message, type = 'neutral') {
+                const feedbackElement = document.getElementById('feedback-message');
+                feedbackElement.textContent = message;
+                
+                // Remove existing classes
+                feedbackElement.classList.remove('neutral', 'success', 'error');
+                
+                // Add the appropriate class
+                feedbackElement.classList.add(type);
+            }
+
+            updateUI() {
+                // Update level and score displays
+                document.querySelector('.level-display').textContent = `Level: ${this.state.level}/${this.maxLevel}`;
+                document.querySelector('.score-display').textContent = `Score: ${Math.floor(this.state.score)}`;
+                
+                // Update phase display
+                const phaseText = {
+                    'ready': 'Ready',
+                    'observation': 'Observe',
+                    'reproduction': 'Reproduce',
+                    'feedback': 'Feedback',
+                    'complete': 'Complete'
+                }[this.state.phase] || 'Ready';
+                
+                document.querySelector('.phase-display').textContent = phaseText;
+                
+                // Update start button text
+                const startButton = document.getElementById('start-button');
+                if (this.state.phase === 'ready') {
+                    startButton.textContent = 'Start';
+                } else if (this.state.phase === 'feedback') {
+                    startButton.textContent = 'Continue';
+                } else if (this.state.phase === 'complete') {
+                    startButton.textContent = 'Play Again';
+                } else {
+                    startButton.textContent = 'Start';
+                }
+            }
+
+            resetState() {
+                this.state = {
+                    phase: 'ready',
+                    score: 0,
+                    level: 1,
+                    round: 0,
+                    currentPattern: null,
+                    userSequence: []
+                };
+                
+                this.clearGrid();
+                this.updateFeedback('Press Start to begin training', 'neutral');
+            }
+        }
+
+        // Initialize the Neural Synthesis module when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            window.neuralSynthesis = new NeuralSynthesis();
+        });
+    </script>
+</body>
+</html> 

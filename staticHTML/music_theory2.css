@@ -1,0 +1,492 @@
+/* Music Theory Module CSS - Version 2 (Percentage-based Piano Width) */
+
+/* Main layout */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f8ff;
+    color: #333;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Screen layouts */
+.screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* Header */
+.header {
+    background-color: #3a86ff;
+    color: white;
+    padding: 15px 0;
+    text-align: center;
+    width: 100%;
+    border-radius: 8px 8px 0 0;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+/* Game stats */
+.stats-container {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: 10px 0;
+    background-color: #f5f7fa;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.stat {
+    text-align: center;
+    padding: 0 15px;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Challenge area */
+.challenge-container {
+    width: 100%;
+    padding: 20px;
+    background-color: #e6f2ff;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.challenge-message {
+    font-size: 1.2rem;
+    color: #2b6cb0;
+    margin-bottom: 20px;
+}
+
+/* Visualization area - VERSION 2: PERCENTAGE-BASED APPROACH */
+#visualization-area {
+    width: 100%;
+    height: 30vh; /* Use viewport height */
+    min-height: 180px; /* Minimum height fallback */
+    background-color: #dbeeff;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    display: block; /* Ensure this is visible */
+}
+
+/* Piano container with percentage-based layout */
+#piano-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* Piano keyboard wrapper with percentage width */
+.piano-keyboard-wrapper {
+    position: relative;
+    width: 80%; /* Use percentage width */
+    max-width: 600px; /* Maximum width */
+    min-width: 320px; /* Minimum width */
+    height: 80%; /* Percentage of container height */
+    margin: 0 auto;
+    display: block;
+    visibility: visible !important;
+}
+
+/* Piano key styles with percentage widths */
+.piano-key {
+    position: absolute;
+    height: 75%; /* Percentage of wrapper height */
+    border: 1px solid #000;
+    border-radius: 0 0 5px 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s;
+}
+
+/* White keys use percentage widths based on number of keys */
+.white-key {
+    background-color: #fff;
+    width: calc(100% / 14); /* 2 octaves = 14 white keys */
+    z-index: 1;
+}
+
+/* Calculate white key positions based on their index */
+.white-key:nth-child(1) { left: calc(0 * (100% / 14)); }
+.white-key:nth-child(2) { left: calc(1 * (100% / 14)); }
+.white-key:nth-child(3) { left: calc(2 * (100% / 14)); }
+.white-key:nth-child(4) { left: calc(3 * (100% / 14)); }
+.white-key:nth-child(5) { left: calc(4 * (100% / 14)); }
+.white-key:nth-child(6) { left: calc(5 * (100% / 14)); }
+.white-key:nth-child(7) { left: calc(6 * (100% / 14)); }
+.white-key:nth-child(8) { left: calc(7 * (100% / 14)); }
+.white-key:nth-child(9) { left: calc(8 * (100% / 14)); }
+.white-key:nth-child(10) { left: calc(9 * (100% / 14)); }
+.white-key:nth-child(11) { left: calc(10 * (100% / 14)); }
+.white-key:nth-child(12) { left: calc(11 * (100% / 14)); }
+.white-key:nth-child(13) { left: calc(12 * (100% / 14)); }
+.white-key:nth-child(14) { left: calc(13 * (100% / 14)); }
+
+.black-key {
+    background-color: #333;
+    width: calc(60% * (100% / 14)); /* 60% of white key width */
+    height: 50%; /* Shorter than white keys */
+    z-index: 2;
+}
+
+/* Calculate black key positions */
+/* First octave */
+.black-key:nth-child(15) { left: calc((100% / 14) * 0.7); } /* C# */
+.black-key:nth-child(16) { left: calc((100% / 14) * 1.7); } /* D# */
+.black-key:nth-child(17) { left: calc((100% / 14) * 3.7); } /* F# */
+.black-key:nth-child(18) { left: calc((100% / 14) * 4.7); } /* G# */
+.black-key:nth-child(19) { left: calc((100% / 14) * 5.7); } /* A# */
+/* Second octave */
+.black-key:nth-child(20) { left: calc((100% / 14) * 7.7); } /* C# */
+.black-key:nth-child(21) { left: calc((100% / 14) * 8.7); } /* D# */
+.black-key:nth-child(22) { left: calc((100% / 14) * 10.7); } /* F# */
+.black-key:nth-child(23) { left: calc((100% / 14) * 11.7); } /* G# */
+.black-key:nth-child(24) { left: calc((100% / 14) * 12.7); } /* A# */
+
+.key-label {
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+    text-align: center;
+    font-size: 10px;
+}
+
+.white-key .key-label {
+    color: #333;
+}
+
+.black-key .key-label {
+    color: #fff;
+}
+
+/* Key states */
+.key-active {
+    background-color: #a7d8ff;
+}
+
+.key-highlight {
+    background-color: #ffdc73;
+}
+
+.black-key.key-active {
+    background-color: #5c88c6;
+}
+
+.black-key.key-highlight {
+    background-color: #b3974d;
+}
+
+/* Waveform display */
+#waveform-display {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000814;
+}
+
+#waveform-display canvas {
+    width: 100%;
+    height: 100%;
+}
+
+/* Circle of fifths */
+#circle-of-fifths {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #001f54;
+    position: relative;
+}
+
+.circle-container {
+    position: relative;
+    width: min(180px, 80%);
+    height: min(180px, 80%);
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+
+.note-position {
+    position: absolute;
+    width: min(30px, 16%);
+    height: min(30px, 16%);
+    border-radius: 50%;
+    background-color: #ffd60a;
+    color: #001219;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: min(12px, 3vw);
+    font-weight: bold;
+    transform: translate(-50%, -50%);
+}
+
+.note-highlight {
+    background-color: #ff9e00;
+    box-shadow: 0 0 10px #ff9e00;
+}
+
+/* Options */
+.options-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.option {
+    padding: 15px;
+    background-color: #e6f7ff;
+    border: 2px solid #91caff;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.option:hover {
+    background-color: #bae0ff;
+    transform: translateY(-2px);
+}
+
+.option.selected {
+    background-color: #91caff;
+    border-color: #1890ff;
+    color: #003566;
+}
+
+/* Buttons */
+.button {
+    padding: 10px 20px;
+    background-color: #1890ff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 1rem;
+    margin: 10px;
+}
+
+.button:hover {
+    background-color: #096dd9;
+}
+
+.button.secondary {
+    background-color: #8c8c8c;
+}
+
+.button.secondary:hover {
+    background-color: #595959;
+}
+
+/* Toggle buttons */
+.toggle-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.toggle-button {
+    padding: 8px 15px;
+    background-color: #d9d9d9;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 0 5px;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+
+.toggle-button:hover {
+    background-color: #bfbfbf;
+}
+
+.toggle-button.active {
+    background-color: #1890ff;
+    color: white;
+    border-color: #1890ff;
+}
+
+/* Feedback screen */
+.feedback-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.feedback-message {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.feedback-message.correct {
+    color: #52c41a;
+}
+
+.feedback-message.incorrect {
+    color: #f5222d;
+}
+
+.correct-answer {
+    font-size: 1.2rem;
+    color: #8c8c8c;
+    margin-bottom: 20px;
+}
+
+/* Results screen */
+.results-container {
+    text-align: center;
+    width: 100%;
+}
+
+.final-score {
+    font-size: 2rem;
+    color: #1890ff;
+    margin-bottom: 20px;
+}
+
+.stats-summary {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 30px;
+}
+
+.category-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.category-stat {
+    background-color: #f0f8ff;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+}
+
+.category-name {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #1890ff;
+}
+
+/* Helper classes */
+.hidden {
+    display: none !important;
+}
+
+.mb-10 {
+    margin-bottom: 10px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Create a specific JS hook for positioning the piano keys dynamically */
+.dynamic-piano-keyboard::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .stats-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .stat {
+        margin-bottom: 10px;
+    }
+    
+    #visualization-area {
+        height: 25vh;
+    }
+    
+    .piano-keyboard-wrapper {
+        width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .challenge-message {
+        font-size: 1rem;
+    }
+    
+    .options-container {
+        grid-template-columns: 1fr;
+    }
+    
+    #visualization-area {
+        height: 20vh;
+    }
+    
+    .toggle-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .toggle-button {
+        margin-bottom: 5px;
+    }
+    
+    .piano-keyboard-wrapper {
+        width: 95%;
+    }
+} 

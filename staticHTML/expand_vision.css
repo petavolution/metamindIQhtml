@@ -1,0 +1,177 @@
+/* Specific styles for the Expand Vision module */
+
+/* Vision container layout */
+.vision-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 400px;
+    position: relative;
+    margin: 2rem 0;
+}
+
+/* Oval container and oval */
+.oval-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.oval {
+    background-color: transparent;
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: width 0.5s ease, height 0.5s ease;
+    width: 30px;
+    height: 30px;
+}
+
+/* Focus point (red dot) */
+#focus-point {
+    width: 6px;
+    height: 6px;
+    background-color: red;
+    border-radius: 50%;
+    position: absolute;
+    z-index: 2;
+}
+
+/* Central content (word or image) */
+#central-content {
+    color: var(--text-color);
+    font-size: 1.2rem;
+    text-align: center;
+    position: absolute;
+    z-index: 1;
+}
+
+/* Phase text indicator */
+.phase-text {
+    text-align: center;
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+    color: var(--text-secondary);
+    transition: opacity 0.3s;
+}
+
+/* Peripheral numbers */
+.peripheral-number {
+    position: absolute;
+    font-size: 1.5rem;
+    font-weight: bold;
+    z-index: 3;
+    opacity: 0;
+    transition: opacity 0.3s ease, top 0.5s ease, left 0.5s ease, right 0.5s ease, bottom 0.5s ease;
+}
+
+.peripheral-number.visible {
+    opacity: 1;
+}
+
+#number-top {
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(220, 220, 220, 1);
+}
+
+#number-right {
+    top: 50%;
+    right: 10%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 120, 1);
+}
+
+#number-bottom {
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(120, 255, 120, 1);
+}
+
+#number-left {
+    top: 50%;
+    left: 10%;
+    transform: translateY(-50%);
+    color: rgba(120, 120, 255, 1);
+}
+
+/* Sum calculation prompt */
+.sum-container {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 1.2rem;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.sum-container.visible {
+    opacity: 1;
+}
+
+.sum-result {
+    margin-top: 1rem;
+    font-weight: bold;
+    font-size: 1.4rem;
+    color: var(--success-color);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.sum-result.visible {
+    opacity: 1;
+}
+
+/* Controls */
+.controls {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: rgba(180, 180, 180, 0.8);
+}
+
+/* Phase styles */
+.phase-preparation .oval {
+    border-color: rgba(0, 120, 255, 0.8);
+    box-shadow: 0 0 15px rgba(0, 120, 255, 0.4);
+}
+
+.phase-active .oval {
+    border-color: rgba(0, 180, 100, 0.8);
+    box-shadow: 0 0 15px rgba(0, 180, 100, 0.4);
+}
+
+/* Animations */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.phase-preparation .oval {
+    animation: pulse 2s infinite ease-in-out;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .vision-container {
+        height: 300px;
+    }
+    
+    .peripheral-number {
+        font-size: 1.2rem;
+    }
+    
+    .phase-text {
+        font-size: 1rem;
+    }
+} 

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symbol Memory Training</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="symbol_memory.css">
+</head>
+<body>
+    <div class="container">
+        <div id="start-screen" class="screen">
+            <h1>Symbol Memory Training</h1>
+            <div class="instructions">
+                <p>This exercise trains your short-term memory and attention to detail.</p>
+                <p>1. Memorize the pattern of symbols shown on the screen</p>
+                <p>2. The pattern will disappear and then reappear with a possible change</p>
+                <p>3. Identify if a symbol was changed and which one</p>
+                <p>4. The grid size starts at 3×3 and increases by 1 each level</p>
+            </div>
+            <button id="start-button" class="button">Start Training</button>
+        </div>
+
+        <div id="game-screen" class="screen hidden">
+            <h1>Symbol Memory Training</h1>
+            <div class="stats">
+                <div class="level">Level: <span id="level">1</span></div>
+                <div class="score">Score: <span id="score">0</span></div>
+                <div class="timer">Time: <span id="time-remaining">0</span>s</div>
+            </div>
+            
+            <div class="phase-indicator">
+                <div id="phase-text" class="phase-text">Memorize the pattern</div>
+            </div>
+            
+            <div class="symbol-grid-container">
+                <div id="symbol-grid" class="symbol-grid"></div>
+            </div>
+            
+            <div id="answer-panel" class="answer-panel hidden">
+                <p>Was a symbol changed?</p>
+                <div class="button-group">
+                    <button id="yes-button" class="button answer-button">Yes</button>
+                    <button id="no-button" class="button answer-button">No</button>
+                </div>
+            </div>
+            
+            <div id="position-panel" class="position-panel hidden">
+                <p>Click on the changed symbol</p>
+            </div>
+            
+            <div class="result-message hidden" id="result-message"></div>
+        </div>
+
+        <div id="complete-screen" class="screen hidden">
+            <h1>Training Complete!</h1>
+            <p>You have completed the Symbol Memory training session.</p>
+            <div class="results">
+                <p>Score: <span id="final-score">0</span></p>
+                <p>Correct answers: <span id="correct-answers">0</span>/<span id="total-questions">0</span></p>
+                <p>This has helped improve your working memory and attention to detail.</p>
+            </div>
+            <button id="restart-button" class="button">Train Again</button>
+        </div>
+    </div>
+
+    <script src="symbol_memory.js"></script>
+</body>
+</html> 

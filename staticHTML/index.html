@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetaMindIQTrain - Cognitive Training Modules</title>
+    <style>
+        :root {
+            --bg-color: #14191f;
+            --text-color: #f0f0f0;
+            --primary-color: #0078ff;
+            --card-bg: #1e242c;
+            --card-hover: #2a3038;
+            --accent-color: #32ff32;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .description {
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        
+        .module-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: transform 0.3s, background-color 0.3s;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .module-card:hover {
+            transform: translateY(-5px);
+            background-color: var(--card-hover);
+        }
+        
+        .module-title {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .module-description {
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+        
+        .module-link {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: #fff;
+            text-decoration: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+            align-self: flex-start;
+        }
+        
+        .module-link:hover {
+            background-color: #0066dd;
+            transform: scale(1.05);
+        }
+        
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: rgba(0, 120, 255, 0.2);
+            color: var(--primary-color);
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .tag.advanced {
+            background-color: rgba(255, 120, 0, 0.2);
+            color: #ff7800;
+        }
+        
+        .tag.music {
+            background-color: rgba(132, 0, 255, 0.2);
+            color: #8400ff;
+        }
+        
+        .category-header {
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MetaMindIQTrain</h1>
+            <p class="description">
+                A collection of cognitive training modules designed to enhance mental performance, 
+                pattern recognition, peripheral vision, and spatial awareness.
+            </p>
+        </header>
+        
+        <h2>Visual Cognition Modules</h2>
+        
+        <div class="modules-grid">
+            <div class="module-card">
+                <h3 class="module-title">Morph Matrix</h3>
+                <span class="tag">Pattern Recognition</span>
+                <p class="module-description">
+                    Train your pattern recognition and spatial reasoning with this matrix-based challenge. 
+                    Identify exact rotations of patterns and distinguish them from modified versions.
+                </p>
+                <a href="morph_matrix.html" class="module-link">Start Training</a>
+            </div>
+            
+            <div class="module-card">
+                <h3 class="module-title">Expand Vision</h3>
+                <span class="tag">Visual Attention</span>
+                <p class="module-description">
+                    Improve your peripheral vision and multi-focus attention. Focus on a central point while 
+                    being aware of numbers appearing at the edges of your visual field.
+                </p>
+                <a href="expand_vision.html" class="module-link">Start Training</a>
+            </div>
+            
+            <div class="module-card">
+                <h3 class="module-title">Symbol Memory</h3>
+                <span class="tag">Memory</span>
+                <p class="module-description">
+                    Enhance short-term memory and attention to detail. Memorize patterns of symbols and
+                    identify when changes occur.
+                </p>
+                <a href="symbol_memory.html" class="module-link">Start Training</a>
+            </div>
+
+            <div class="module-card">
+                <h3 class="module-title">Neural Synthesis</h3>
+                <span class="tag advanced">Advanced Cognition</span>
+                <p class="module-description">
+                    Train cross-modal integration between visual and auditory patterns. This innovative module
+                    creates a synesthetic experience that enhances neural plasticity and cognitive flexibility.
+                </p>
+                <a href="neural_synthesis.html" class="module-link">Start Training</a>
+            </div>
+        </div>
+        
+        <h2 class="category-header">Music & Audio Training</h2>
+        
+        <div class="modules-grid">
+            <div class="module-card">
+                <h3 class="module-title">Music Theory</h3>
+                <span class="tag music">Audio Cognition</span>
+                <p class="module-description">
+                    Train your ear and musical cognition with this interactive music theory module. 
+                    Identify scales, intervals, and chords while visualizing musical patterns.
+                </p>
+                <a href="music_theory.html" class="module-link">Start Training</a>
+            </div>
+            
+            <div class="module-card">
+                <h3 class="module-title">Psychoacoustic Wizard</h3>
+                <span class="tag music">Rhythm</span>
+                <span class="tag">Reaction Time</span>
+                <p class="module-description">
+                    Master rhythm, timing, and audio-visual integration through this engaging rhythm game.
+                    Hit notes in time with the music to build combos and crowd energy.
+                </p>
+                <a href="psychoacoustic_wizard.html" class="module-link">Start Training</a>
+            </div>
+            
+            <div class="module-card">
+                <h3 class="module-title">Interactive Music Theory</h3>
+                <span class="tag music">Multi-Modal</span>
+                <span class="tag advanced">Adaptive</span>
+                <p class="module-description">
+                    Advanced interactive music training with real-time feedback and dynamic difficulty adjustments.
+                    Features multiple visualization modes and comprehensive progress tracking.
+                </p>
+                <a href="interactive_music_theory.html" class="module-link">Start Training</a>
+            </div>
+        </div>
+        
+        <footer>
+            <p>&copy; 2025 MetaMindIQTrain - Web version of PyGame-based cognitive training modules</p>
+        </footer>
+    </div>
+</body>
+</html> 

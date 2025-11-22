@@ -1,0 +1,457 @@
+/* Music Theory Module - Version 1 (Fixed Piano Width) 
+ * Dark Theme CSS
+ */
+
+/* Base Styles */
+:root {
+  --primary-bg: #121212;
+  --secondary-bg: #1e1e1e;
+  --surface: #2a2a2a;
+  --primary: #8400ff;
+  --primary-dark: #6a00cc;
+  --primary-light: #ad33ff;
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3b3;
+  --success: #4caf50;
+  --error: #f44336;
+  --border-radius: 8px;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --key-active: #a7d8ff;
+  --key-highlight: #ffdc73;
+  --black-key-active: #5c88c6;
+  --black-key-highlight: #b3974d;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background-color: var(--primary-bg);
+  padding: 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: var(--secondary-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+/* Header Styles */
+.header {
+  background-color: var(--surface);
+  color: var(--text-primary);
+  padding: 15px 20px;
+  text-align: center;
+  border-bottom: 2px solid var(--primary);
+}
+
+.header h1 {
+  font-size: 1.8rem;
+  margin: 0;
+  color: var(--primary-light);
+}
+
+/* Screen Styles */
+.screen {
+  display: none;
+  padding: 20px;
+}
+
+.screen.active {
+  display: block;
+}
+
+/* Start Screen */
+#start-screen {
+  text-align: center;
+}
+
+#start-screen p {
+  margin-bottom: 15px;
+  color: var(--text-secondary);
+}
+
+#start-screen ul {
+  list-style-position: inside;
+  text-align: left;
+  max-width: 400px;
+  margin: 15px auto;
+  background-color: var(--surface);
+  padding: 15px 20px;
+  border-radius: var(--border-radius);
+}
+
+#start-screen li {
+  margin-bottom: 8px;
+}
+
+/* Button Styles */
+.button {
+  display: inline-block;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 10px 0;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: var(--primary-dark);
+}
+
+.button.secondary {
+  background-color: var(--surface);
+  border: 1px solid var(--primary);
+}
+
+/* Game Screen */
+.stats-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  background-color: var(--surface);
+  padding: 10px;
+  border-radius: var(--border-radius);
+}
+
+.stat {
+  text-align: center;
+  padding: 5px 15px;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.stat-value {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--primary-light);
+}
+
+.challenge-container {
+  background-color: var(--surface);
+  padding: 20px;
+  border-radius: var(--border-radius);
+  margin-bottom: 20px;
+}
+
+.challenge-message {
+  font-size: 1.1rem;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* Toggle Buttons */
+.toggle-buttons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.toggle-button {
+  background-color: var(--secondary-bg);
+  border: 1px solid var(--primary);
+  color: var(--text-primary);
+  padding: 8px 15px;
+  cursor: pointer;
+  margin: 0 5px;
+  border-radius: var(--border-radius);
+}
+
+.toggle-button.active {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* Visualization Area */
+#visualization-area {
+  width: 100%;
+  min-height: 200px;
+  background-color: rgba(30, 36, 44, 0.6);
+  margin-bottom: 20px;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  position: relative;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Piano Container */
+#piano-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  min-width: 500px;
+}
+
+/* Piano Keyboard */
+.piano-keyboard-wrapper {
+  position: relative;
+  width: 560px; /* Fixed width for 2 octaves (7 white keys * 2 octaves * 40px) */
+  height: 150px;
+  margin: 0 auto;
+  display: block;
+  visibility: visible !important;
+}
+
+.piano-key {
+  position: absolute;
+  height: 120px;
+  border: 1px solid #000;
+  border-radius: 0 0 5px 5px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s;
+}
+
+.white-key {
+  background-color: #fff;
+  width: 40px; /* Fixed width */
+  z-index: 1;
+}
+
+.black-key {
+  background-color: #222;
+  width: 24px; /* Fixed width */
+  height: 80px;
+  z-index: 2;
+}
+
+.key-label {
+  position: absolute;
+  bottom: 5px;
+  width: 100%;
+  text-align: center;
+  font-size: 10px;
+}
+
+.white-key .key-label {
+  color: #333;
+}
+
+.black-key .key-label {
+  color: #fff;
+}
+
+.key-active {
+  background-color: var(--key-active);
+}
+
+.key-highlight {
+  background-color: var(--key-highlight);
+}
+
+.black-key.key-active {
+  background-color: var(--black-key-active);
+}
+
+.black-key.key-highlight {
+  background-color: var(--black-key-highlight);
+}
+
+/* Options Container */
+.options-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.option {
+  background-color: var(--secondary-bg);
+  border: 1px solid var(--primary);
+  color: var(--text-primary);
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.option:hover {
+  background-color: rgba(132, 0, 255, 0.1);
+}
+
+.option.selected {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* Waveform Display */
+#waveform-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 200px;
+}
+
+/* Circle of Fifths */
+#circle-of-fifths {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 200px;
+}
+
+.circle-container {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 2px solid var(--primary);
+}
+
+.note-position {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background-color: var(--secondary-bg);
+  color: var(--text-primary);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+  transform: translate(-50%, -50%);
+}
+
+.note-highlight {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* Feedback Screen */
+.feedback-container {
+  text-align: center;
+  padding: 20px;
+  background-color: var(--surface);
+  border-radius: var(--border-radius);
+}
+
+.feedback-message {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.feedback-message.correct {
+  color: var(--success);
+}
+
+.feedback-message.incorrect {
+  color: var(--error);
+}
+
+.correct-answer {
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+/* Results Screen */
+.results-container {
+  background-color: var(--surface);
+  padding: 20px;
+  border-radius: var(--border-radius);
+  text-align: center;
+}
+
+.final-score {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: var(--primary-light);
+}
+
+.stats-summary {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.category-stats {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.category-stat {
+  background-color: var(--secondary-bg);
+  padding: 15px;
+  border-radius: var(--border-radius);
+  text-align: left;
+}
+
+.category-name {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: var(--primary-light);
+}
+
+/* Helper Classes */
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .piano-keyboard-wrapper {
+    width: 320px; /* Reduced width for smaller screens */
+    transform: scale(0.8);
+    transform-origin: center center;
+  }
+  
+  #visualization-area {
+    height: 160px;
+  }
+  
+  .stats-container {
+    flex-direction: column;
+  }
+  
+  .stat {
+    padding: 5px;
+    margin-bottom: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .piano-keyboard-wrapper {
+    transform: scale(0.6);
+  }
+  
+  #visualization-area {
+    height: 140px;
+  }
+  
+  .key-label {
+    font-size: 0.7rem;
+  }
+} 

@@ -1,0 +1,115 @@
+project concept:
+
+MetaMindIQTrain is a computer aided training tool to improve cognitive brain functions and enhance the ability of the mind to focus, learn and recognize patterns with increased speed and train the ability to intuitively find meta-patterns and meta-strategies.
+
+With MetaMind you can:
+
+train your IQ and Memory
+improve logic and intuitive cognitive functions and synaptic speed
+enhance your ability and field of perception in 2D, 3D, using classical keyboard mouse input or VR devices
+
+
+
+
++ + +
+
+
+project architecture:
+
+This approach uses a Python-based server for encapsulated game logic and leverages delta encoding over websockets (with frameworks such as Flask) to synchronize state updates with completely independent rendering modules. 
+
+The design supports multiple rendering backends—such as Pygame (with OpenGL/vulkan), Godot, and WebGL/WebXR, through strong encapsulation and adherence to MVC principles.
+
+using microservices, and a core python websocket server, allowing full use of the powerful python library ecosystem for the internal game logic, fused with the power of client side rendering, as native application, or webGL/webXR using three.js, babylon.js, a-frame, etc
+
+
+Renderer Agnostic Design using Independent Rendering Clients:
+
+Rendering clients are completely decoupled from the core game logic. They subscribe to state updates from the server and render the game world accordingly. This decoupling allows you to leverage different rendering technologies for different platforms:
+
+Pygame with OpenGL/Vulkan:
+Ideal for native desktop applications, where performance can be maximized through hardware acceleration and direct OpenGL/Vulkan support.
+
+Godot Engine:
+An open-source engine with native WebXR support. With tools like Godot-Python, you can integrate your Python game logic while utilizing Godot’s powerful rendering capabilities.
+
+WebGL/WebXR Clients:
+Browser-based clients built with Three.js, Babylon.js, or A-Frame. These frameworks provide immersive 3D experiences directly in the web browser and are fully capable of leveraging modern VR/AR interfaces.
+
+
+This microservices-based design ensures:
+
+Modular Separation: Each component (game logic, communication, rendering) is independent and replaceable.
+
+Efficient Real-Time Synchronization: Delta encoding minimizes network overhead and ensures low-latency updates.
+
+Platform Flexibility: Support for native desktop and web-based clients through open-source frameworks.
+
+
+application should support any screen resolution, 
+automatically scale all render ouyput, UI, and control interaction elements accordingly, 
+while as a default the window display size is rendered in resolution 1440x1024.
+
+
++ + +
+
+
+each training module should utilize color and sound to aid multi-modal cognitive engagement and learning potential optzimization, 
+creatively employing methods from modern psychology about perception and multi modal awareness.
+
+the feedback phase indicator color should be dependent if answer was correct then green, or wrong then red
+
+
+
+
+
+
+
+
+core training modules:
+
+
+🔍 Symbol Memory Module
+(🔠🧠📊🎨⚡️🔄💡🚀)
+
+
+🔹 Uses a clean, modern UI with a structured grid layout for symbol cells.
+
+🔹 Clear separation of game phases (memorize, recall, feedback) ensures smooth interaction.
+
+🔹 Distinct visual indicators: blue for memorization, orange for recall phase.
+
+🔹 Grid layout is center-aligned with fixed cell sizes for uniform presentation.
+
+🔹 Color-coded feedback enhances clarity for correct and incorrect answers.
+
+🔹starts with a 2 by 2 grid, and then each 2 rounds, increases by 1 in grid size
+
+🔍 Morph Matrix Module
+(📐🧠🎮📊⚡️🔄💡🚀)
+
+
+🔹 Arranges patterns in a structured 3×2 grid layout with the original pattern at the top row center.
+
+🔹 Highlights selected patterns using clear visual effects.
+
+🔹 Displays pattern labels above each matrix for easy identification.
+
+🔹 Provides direct feedback via a results screen, marking correct and incorrect answers.
+
+🔹 Includes a well-placed button at the bottom for answer verification.
+
+
+
+🔍 Expand Vision Module
+(👀📊⚡️🎯🧠🔄🎮🚀)
+
+🔹 Features a central focus point with an expanding circle/oval (depending on window size render area ratio) to train peripheral awareness.
+
+🔹 Displays numerical cues in peripheral positions, just outside of the expanding circle, that move outwards, as the circle grows in diameter (top, right, bottom, left) to test peripheral vision and relaxed widened attention.
+
+🔹 Uses clear phase indicators and instructions for seamless interaction.
+
+🔹 Provides an intuitive answer input mechanism for immediate feedback.
+
+🔹 Maintains a consistent color scheme to align with other cognitive training modules.

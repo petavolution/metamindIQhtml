@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psychoacoustic Wizard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="psychoacoustic_wizard.css">
+</head>
+<body>
+    <div class="container">
+        <div id="start-screen" class="screen">
+            <h1>Psychoacoustic Wizard</h1>
+            <div class="instructions">
+                <p>Train your audio-visual synchronization, rhythm perception, and reaction timing with this engaging rhythm game.</p>
+                <p>Press the corresponding keys when notes reach the target zone to build your combo and energy levels.</p>
+                <p>Maintain your streak to increase your multiplier and earn higher scores.</p>
+                <p>The tempo will gradually increase as you progress, challenging your timing precision!</p>
+            </div>
+            <div class="control-instructions">
+                <h3>Controls</h3>
+                <div class="keys-container">
+                    <div class="key-display">A</div>
+                    <div class="key-display">S</div>
+                    <div class="key-display">D</div>
+                    <div class="key-display">F</div>
+                    <div class="key-display">G</div>
+                    <div class="key-display">H</div>
+                    <div class="key-display">J</div>
+                </div>
+                <p>Press these keys to hit the notes when they reach the target line</p>
+            </div>
+            <button id="start-button" class="button">Start Challenge</button>
+        </div>
+
+        <div id="game-screen" class="screen hidden">
+            <div class="game-header">
+                <h1>Psychoacoustic Wizard</h1>
+                <div class="stats-container">
+                    <div class="stat">
+                        <div class="stat-label">Score</div>
+                        <div id="score" class="stat-value">0</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Combo</div>
+                        <div id="combo" class="stat-value">0</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Multiplier</div>
+                        <div id="multiplier" class="stat-value">x1</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Level</div>
+                        <div id="level" class="stat-value">1</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="game-container">
+                <div class="energy-meter-container">
+                    <div class="energy-label">Crowd Energy</div>
+                    <div class="energy-meter">
+                        <div id="energy-fill" class="energy-fill"></div>
+                    </div>
+                </div>
+                
+                <div id="note-highway">
+                    <!-- Lanes will be added dynamically -->
+                    <div class="target-line"></div>
+                </div>
+                
+                <div class="key-indicators">
+                    <div class="key-indicator" data-key="A">A</div>
+                    <div class="key-indicator" data-key="S">S</div>
+                    <div class="key-indicator" data-key="D">D</div>
+                    <div class="key-indicator" data-key="F">F</div>
+                    <div class="key-indicator" data-key="G">G</div>
+                    <div class="key-indicator" data-key="H">H</div>
+                    <div class="key-indicator" data-key="J">J</div>
+                </div>
+            </div>
+            
+            <div class="audio-visualizer-container">
+                <canvas id="audio-visualizer"></canvas>
+            </div>
+            
+            <div class="feedback-container">
+                <div id="feedback-text" class="feedback-text"></div>
+                <div id="tempo-display" class="tempo-display">60 BPM</div>
+            </div>
+            
+            <button id="pause-button" class="button small-button">Pause</button>
+        </div>
+        
+        <div id="pause-screen" class="screen hidden">
+            <h1>Game Paused</h1>
+            <button id="resume-button" class="button">Resume</button>
+            <button id="restart-button" class="button secondary">Restart</button>
+            <a href="index.html" class="button secondary">Back to Menu</a>
+        </div>
+        
+        <div id="results-screen" class="screen hidden">
+            <h1>Performance Results</h1>
+            
+            <div class="results-summary">
+                <div class="result-stat">
+                    <div class="result-label">Final Score</div>
+                    <div id="final-score" class="result-value">0</div>
+                </div>
+                <div class="result-stat">
+                    <div class="result-label">Max Combo</div>
+                    <div id="max-combo" class="result-value">0</div>
+                </div>
+                <div class="result-stat">
+                    <div class="result-label">Highest Level</div>
+                    <div id="max-level" class="result-value">1</div>
+                </div>
+                <div class="result-stat">
+                    <div class="result-label">Peak Energy</div>
+                    <div id="peak-energy" class="result-value">0%</div>
+                </div>
+            </div>
+            
+            <div class="performance-metrics">
+                <h2>Performance Metrics</h2>
+                <div class="metrics-grid">
+                    <div class="metric">
+                        <div class="metric-label">Notes Hit</div>
+                        <div id="notes-hit" class="metric-value">0</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Notes Missed</div>
+                        <div id="notes-missed" class="metric-value">0</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Hit Accuracy</div>
+                        <div id="accuracy" class="metric-value">0%</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Perfect Patterns</div>
+                        <div id="perfect-patterns" class="metric-value">0</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="achievement-banner" id="achievement-banner">
+                <!-- Achievement notifications will appear here -->
+            </div>
+            
+            <div class="button-group">
+                <button id="play-again-button" class="button">Play Again</button>
+                <a href="index.html" class="button secondary">Back to Menu</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="psychoacoustic_wizard.js"></script>
+</body>
+</html> 

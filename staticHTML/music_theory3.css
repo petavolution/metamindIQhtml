@@ -1,0 +1,556 @@
+/* Music Theory Module CSS - Version 3 (CSS Grid Piano Layout) */
+
+/* Main layout */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f8ff;
+    color: #333;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Screen layouts */
+.screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* Header */
+.header {
+    background-color: #3a86ff;
+    color: white;
+    padding: 15px 0;
+    text-align: center;
+    width: 100%;
+    border-radius: 8px 8px 0 0;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+/* Game stats */
+.stats-container {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: 10px 0;
+    background-color: #f5f7fa;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.stat {
+    text-align: center;
+    padding: 0 15px;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Challenge area */
+.challenge-container {
+    width: 100%;
+    padding: 20px;
+    background-color: #e6f2ff;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.challenge-message {
+    font-size: 1.2rem;
+    color: #2b6cb0;
+    margin-bottom: 20px;
+}
+
+/* Visualization area - VERSION 3: CSS GRID APPROACH */
+#visualization-area {
+    width: 100%;
+    height: 250px;
+    background-color: #dbeeff;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    display: block; /* Ensure this is visible */
+}
+
+/* Piano container with grid layout */
+#piano-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* Piano keyboard wrapper with grid */
+.piano-keyboard-wrapper {
+    display: grid;
+    grid-template-columns: repeat(14, 1fr); /* 14 columns for 2 octaves */
+    grid-template-rows: 1fr;
+    width: 100%;
+    max-width: 700px;
+    height: 150px;
+    position: relative;
+    margin: 0 auto;
+}
+
+/* White key base styles */
+.white-key {
+    background-color: #fff;
+    border: 1px solid #000;
+    border-radius: 0 0 5px 5px;
+    height: 150px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+/* Black key container and positioning */
+.black-keys-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(14, 1fr);
+    pointer-events: none; /* Allow clicks to pass through to the container */
+}
+
+/* Black key styles */
+.black-key {
+    background-color: #333;
+    border: 1px solid #000;
+    border-radius: 0 0 5px 5px;
+    height: 90px;
+    width: 65%;
+    position: absolute;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 5px;
+    cursor: pointer;
+    pointer-events: auto; /* Make the black keys clickable */
+    transition: background-color 0.2s;
+}
+
+/* Black key positions - First octave */
+.black-key[data-note='49'] { /* C# */
+    left: calc(1fr * 0.7);
+    grid-column: 1;
+}
+.black-key[data-note='51'] { /* D# */
+    left: calc(1fr * 1.7);
+    grid-column: 2;
+}
+.black-key[data-note='54'] { /* F# */
+    left: calc(1fr * 3.7);
+    grid-column: 4;
+}
+.black-key[data-note='56'] { /* G# */
+    left: calc(1fr * 4.7);
+    grid-column: 5;
+}
+.black-key[data-note='58'] { /* A# */
+    left: calc(1fr * 5.7);
+    grid-column: 6;
+}
+
+/* Black key positions - Second octave */
+.black-key[data-note='61'] { /* C# */
+    left: calc(1fr * 7.7);
+    grid-column: 8;
+}
+.black-key[data-note='63'] { /* D# */
+    left: calc(1fr * 8.7);
+    grid-column: 9;
+}
+.black-key[data-note='66'] { /* F# */
+    left: calc(1fr * 10.7);
+    grid-column: 11;
+}
+.black-key[data-note='68'] { /* G# */
+    left: calc(1fr * 11.7);
+    grid-column: 12;
+}
+.black-key[data-note='70'] { /* A# */
+    left: calc(1fr * 12.7);
+    grid-column: 13;
+}
+
+/* Key labels */
+.key-label {
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.white-key .key-label {
+    color: #333;
+}
+
+.black-key .key-label {
+    color: #fff;
+}
+
+/* Key states */
+.key-active {
+    background-color: #a7d8ff;
+}
+
+.key-highlight {
+    background-color: #ffdc73;
+}
+
+.black-key.key-active {
+    background-color: #5c88c6;
+}
+
+.black-key.key-highlight {
+    background-color: #b3974d;
+}
+
+/* Waveform display */
+#waveform-display {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000814;
+}
+
+#waveform-display canvas {
+    width: 100%;
+    height: 100%;
+}
+
+/* Circle of fifths */
+#circle-of-fifths {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #001f54;
+    position: relative;
+}
+
+.circle-container {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+
+.note-position {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #ffd60a;
+    color: #001219;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+    transform: translate(-50%, -50%);
+}
+
+.note-highlight {
+    background-color: #ff9e00;
+    box-shadow: 0 0 10px #ff9e00;
+}
+
+/* Options */
+.options-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.option {
+    padding: 15px;
+    background-color: #e6f7ff;
+    border: 2px solid #91caff;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.option:hover {
+    background-color: #bae0ff;
+    transform: translateY(-2px);
+}
+
+.option.selected {
+    background-color: #91caff;
+    border-color: #1890ff;
+    color: #003566;
+}
+
+/* Buttons */
+.button {
+    padding: 10px 20px;
+    background-color: #1890ff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 1rem;
+    margin: 10px;
+}
+
+.button:hover {
+    background-color: #096dd9;
+}
+
+.button.secondary {
+    background-color: #8c8c8c;
+}
+
+.button.secondary:hover {
+    background-color: #595959;
+}
+
+/* Toggle buttons */
+.toggle-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.toggle-button {
+    padding: 8px 15px;
+    background-color: #d9d9d9;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 0 5px;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+
+.toggle-button:hover {
+    background-color: #bfbfbf;
+}
+
+.toggle-button.active {
+    background-color: #1890ff;
+    color: white;
+    border-color: #1890ff;
+}
+
+/* Feedback screen */
+.feedback-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.feedback-message {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.feedback-message.correct {
+    color: #52c41a;
+}
+
+.feedback-message.incorrect {
+    color: #f5222d;
+}
+
+.correct-answer {
+    font-size: 1.2rem;
+    color: #8c8c8c;
+    margin-bottom: 20px;
+}
+
+/* Results screen */
+.results-container {
+    text-align: center;
+    width: 100%;
+}
+
+.final-score {
+    font-size: 2rem;
+    color: #1890ff;
+    margin-bottom: 20px;
+}
+
+.stats-summary {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 30px;
+}
+
+.category-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.category-stat {
+    background-color: #f0f8ff;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+}
+
+.category-name {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #1890ff;
+}
+
+/* Helper classes */
+.hidden {
+    display: none !important;
+}
+
+.mb-10 {
+    margin-bottom: 10px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Special CSS selectors for CSS Grid positioning */
+.black-key-spacer {
+    grid-column: span 1;
+}
+
+/* Special debug class to make the grid visible */
+.debug-grid .piano-keyboard-wrapper {
+    border: 1px dashed red;
+}
+
+.debug-grid .white-key {
+    border: 1px dashed blue;
+}
+
+.debug-grid .black-key {
+    border: 1px dashed green;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .stats-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .stat {
+        margin-bottom: 10px;
+    }
+    
+    #visualization-area {
+        height: 200px;
+    }
+    
+    .piano-keyboard-wrapper {
+        max-width: 500px;
+        height: 120px;
+    }
+    
+    .white-key {
+        height: 120px;
+    }
+    
+    .black-key {
+        height: 70px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .challenge-message {
+        font-size: 1rem;
+    }
+    
+    .options-container {
+        grid-template-columns: 1fr;
+    }
+    
+    #visualization-area {
+        height: 160px;
+    }
+    
+    .piano-keyboard-wrapper {
+        max-width: 320px;
+        height: 100px;
+    }
+    
+    .white-key {
+        height: 100px;
+    }
+    
+    .black-key {
+        height: 60px;
+    }
+    
+    .toggle-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .toggle-button {
+        margin-bottom: 5px;
+    }
+} 

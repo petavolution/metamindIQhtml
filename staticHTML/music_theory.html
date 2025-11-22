@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Theory Training</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="music_theory.css">
+</head>
+<body>
+    <div class="container">
+        <div id="start-screen" class="screen">
+            <h1>Music Theory Training</h1>
+            <div class="instructions">
+                <p>Train your ear and musical cognition with this interactive music theory module.</p>
+                <p>Listen to musical elements (scales, intervals, chords) and identify them correctly.</p>
+                <p>Progress through multiple levels with increasing complexity.</p>
+                <p>Use the visual piano keyboard to hear notes and test your answers.</p>
+            </div>
+            <button id="start-button" class="button">Start Challenge</button>
+        </div>
+
+        <div id="game-screen" class="screen hidden">
+            <h1>Music Theory Training</h1>
+            <div class="stats">
+                <div class="level">Level: <span id="level">1</span></div>
+                <div class="score">Score: <span id="score">0</span></div>
+                <div class="streak">Streak: <span id="streak">0</span></div>
+            </div>
+            <p id="challenge-message" class="instruction">Listen to the audio and select the correct option</p>
+            
+            <div class="challenge-container">
+                <div id="visualization-area">
+                    <!-- Piano visualization will be rendered here -->
+                    <div id="piano-container"></div>
+                    
+                    <!-- Other visualizations (will be toggled) -->
+                    <div id="waveform-display" class="hidden"></div>
+                    <div id="circle-of-fifths" class="hidden"></div>
+                </div>
+                
+                <div class="controls">
+                    <button id="play-button" class="control-button">
+                        <span class="icon">▶</span> Play
+                    </button>
+                    <div class="visualization-toggle">
+                        <button id="toggle-piano" class="viz-button active">Piano</button>
+                        <button id="toggle-waveform" class="viz-button">Waveform</button>
+                        <button id="toggle-circle" class="viz-button">Circle of Fifths</button>
+                    </div>
+                </div>
+                
+                <div id="options-container">
+                    <!-- Options will be dynamically generated here -->
+                </div>
+            </div>
+            
+            <button id="submit-button" class="button">Submit Answer</button>
+        </div>
+
+        <div id="feedback-screen" class="screen hidden">
+            <h1>Feedback</h1>
+            <div id="feedback-message"></div>
+            <div id="correct-answer"></div>
+            
+            <div class="visualization-container">
+                <!-- Visualization of the correct answer -->
+            </div>
+            
+            <button id="next-button" class="button">Next Challenge</button>
+        </div>
+        
+        <div id="results-screen" class="screen hidden">
+            <h1>Training Complete!</h1>
+            <div class="score-summary">
+                <div class="final-score">Final Score: <span id="final-score">0</span></div>
+                <div class="highest-streak">Best Streak: <span id="best-streak">0</span></div>
+                <div class="highest-level">Highest Level: <span id="max-level">1</span></div>
+            </div>
+            
+            <div class="performance-breakdown">
+                <h2>Performance Breakdown</h2>
+                <div id="category-stats">
+                    <!-- Performance stats by category will be shown here -->
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button id="restart-button" class="button">Train Again</button>
+                <a href="index.html" class="button secondary">Back to Menu</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="music_theory.js"></script>
+</body>
+</html> 
