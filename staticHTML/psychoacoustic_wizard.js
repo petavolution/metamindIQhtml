@@ -3,6 +3,36 @@
  * A rhythm game that trains audio-visual synchronization and timing precision.
  */
 
+// Module name for logging
+const MODULE_NAME = 'PsychoacousticWizard';
+
+// Helper function for logging
+function log(level, message, data) {
+    if (typeof MetaMind !== 'undefined' && MetaMind.Debug) {
+        MetaMind.Debug[level](MODULE_NAME, message, data);
+    } else {
+        const logFn = level === 'error' ? console.error :
+                      level === 'warn' ? console.warn : console.log;
+        logFn(`[${MODULE_NAME}]`, message, data || '');
+    }
+}
+
+// Safe event listener attachment
+function addClickListener(element, handler, name) {
+    if (element) {
+        element.addEventListener('click', function(e) {
+            try {
+                handler(e);
+            } catch (err) {
+                log('error', `Error in ${name} handler: ${err.message}`, err);
+            }
+        });
+        return true;
+    }
+    log('warn', `Cannot attach ${name} handler - element not found`);
+    return false;
+}
+
 // Audio Context for Web Audio API
 let audioContext;
 let masterGainNode;
@@ -66,7 +96,9 @@ let animationId;
 
 // Initialize the game
 function init() {
-    // Get DOM elements
+    log('info', 'Initializing module');
+
+    // Get DOM elements - populated after DOM is ready
     elements = {
         startScreen: document.getElementById('start-screen'),
         gameScreen: document.getElementById('game-screen'),
@@ -89,32 +121,61 @@ function init() {
         perfectPatterns: document.getElementById('perfect-patterns')
     };
 
-    // Set up canvas elements
-    noteHighwayCanvas = document.createElement('canvas');
-    noteHighwayCanvas.className = 'note-highway-canvas';
-    document.getElementById('note-highway').appendChild(noteHighwayCanvas);
-    noteHighwayCtx = noteHighwayCanvas.getContext('2d');
+    // Validate required elements
+    const requiredElements = ['startScreen', 'gameScreen', 'score', 'combo'];
+    const missing = requiredElements.filter(name => !elements[name]);
+    if (missing.length > 0) {
+        log('error', `Missing required elements: ${missing.join(', ')}`);
+        return;
+    }
+
+    // Set up canvas elements safely
+    const noteHighwayContainer = document.getElementById('note-highway');
+    if (noteHighwayContainer) {
+        noteHighwayCanvas = document.createElement('canvas');
+        noteHighwayCanvas.className = 'note-highway-canvas';
+        noteHighwayContainer.appendChild(noteHighwayCanvas);
+        noteHighwayCtx = noteHighwayCanvas.getContext('2d');
+    } else {
+        log('warn', 'Note highway container not found');
+    }
 
     visualizerCanvas = document.getElementById('audio-visualizer');
-    visualizerCtx = visualizerCanvas.getContext('2d');
+    if (visualizerCanvas) {
+        visualizerCtx = visualizerCanvas.getContext('2d');
+    } else {
+        log('warn', 'Audio visualizer canvas not found');
+    }
 
-    // Add event listeners
-    document.getElementById('start-button').addEventListener('click', startGame);
-    document.getElementById('pause-button').addEventListener('click', pauseGame);
-    document.getElementById('resume-button').addEventListener('click', resumeGame);
-    document.getElementById('restart-button').addEventListener('click', restartGame);
-    document.getElementById('play-again-button').addEventListener('click', restartGame);
+    // Add event listeners with safe attachment
+    addClickListener(document.getElementById('start-button'), startGame, 'startButton');
+    addClickListener(document.getElementById('pause-button'), pauseGame, 'pauseButton');
+    addClickListener(document.getElementById('resume-button'), resumeGame, 'resumeButton');
+    addClickListener(document.getElementById('restart-button'), restartGame, 'restartButton');
+    addClickListener(document.getElementById('play-again-button'), restartGame, 'playAgainButton');
 
-    // Add keyboard event listeners
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
+    // Add keyboard event listeners with error handling
+    window.addEventListener('keydown', function(e) {
+        try { handleKeyDown(e); }
+        catch (err) { log('error', `Error in keydown handler: ${err.message}`, err); }
+    });
+    window.addEventListener('keyup', function(e) {
+        try { handleKeyUp(e); }
+        catch (err) { log('error', `Error in keyup handler: ${err.message}`, err); }
+    });
 
     // Initialize patterns
-    initializePatterns();
+    try {
+        initializePatterns();
+    } catch (err) {
+        log('error', `Failed to initialize patterns: ${err.message}`, err);
+    }
 
     // Handle window resize
     window.addEventListener('resize', resizeGame);
     resizeGame();
+
+    log('info', 'Module initialized successfully');
 }
 
 // Generate rhythm patterns
@@ -222,6 +283,8 @@ function initializePatterns() {
 
 // Start new game
 function startGame() {
+    log('info', 'Starting game');
+
     // Initialize Audio Context if needed
     if (!audioContext) {
         try {
@@ -230,8 +293,9 @@ function startGame() {
             masterGainNode.gain.value = 0.3; // Default volume
             masterGainNode.connect(audioContext.destination);
             initializeAudio();
+            log('info', 'Audio context initialized');
         } catch (e) {
-            console.error('Web Audio API not supported:', e);
+            log('error', 'Web Audio API not supported', e);
             alert('Your browser does not support the Web Audio API. Sound may not work correctly.');
         }
     }
@@ -247,27 +311,31 @@ function startGame() {
     gameState.level = 1;
     gameState.tempo = 60;
     gameState.gameTime = 0;
-    gameState.lastUpdateTime = audioContext.currentTime;
+    gameState.lastUpdateTime = audioContext ? audioContext.currentTime : 0;
     gameState.notes = [];
     gameState.hitResults = [];
     gameState.notesHit = 0;
     gameState.notesMissed = 0;
     gameState.perfectPatterns = 0;
 
-    // Update UI
-    elements.score.textContent = gameState.score;
-    elements.combo.textContent = gameState.combo;
-    elements.multiplier.textContent = `x${gameState.multiplier}`;
-    elements.level.textContent = gameState.level;
-    elements.energyFill.style.height = `${gameState.energy}%`;
-    elements.tempoDisplay.textContent = `${Math.round(gameState.tempo)} BPM`;
+    // Update UI safely
+    if (elements.score) elements.score.textContent = gameState.score;
+    if (elements.combo) elements.combo.textContent = gameState.combo;
+    if (elements.multiplier) elements.multiplier.textContent = `x${gameState.multiplier}`;
+    if (elements.level) elements.level.textContent = gameState.level;
+    if (elements.energyFill) elements.energyFill.style.height = `${gameState.energy}%`;
+    if (elements.tempoDisplay) elements.tempoDisplay.textContent = `${Math.round(gameState.tempo)} BPM`;
 
     // Initialize note highway
-    initializeNoteHighway();
+    try {
+        initializeNoteHighway();
+    } catch (err) {
+        log('error', `Failed to initialize note highway: ${err.message}`, err);
+    }
 
-    // Show game screen
-    elements.startScreen.classList.add('hidden');
-    elements.gameScreen.classList.remove('hidden');
+    // Show game screen safely
+    if (elements.startScreen) elements.startScreen.classList.add('hidden');
+    if (elements.gameScreen) elements.gameScreen.classList.remove('hidden');
 
     // Start game loop
     if (animationId) {
@@ -828,6 +896,17 @@ function endGame() {
     if (animationId) {
         cancelAnimationFrame(animationId);
         animationId = null;
+    }
+
+    // Save progress to localStorage
+    if (typeof MetaMind !== 'undefined' && MetaMind.Progress) {
+        MetaMind.Progress.saveSession('psychoacoustic_wizard', {
+            score: gameState.score,
+            level: gameState.level,
+            accuracy: accuracy,
+            maxCombo: gameState.maxCombo
+        });
+        log('info', `Progress saved: score=${gameState.score}, level=${gameState.level}`);
     }
 }
 

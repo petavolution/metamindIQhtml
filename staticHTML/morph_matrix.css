@@ -1,6 +1,9 @@
-/* Specific styles for the Morph Matrix module */
+/**
+ * Morph Matrix Module - Specific Styles
+ * Extends styles.css with module-specific styles
+ */
 
-/* Pattern container layouts */
+/* Pattern Container Layouts */
 .patterns-container {
     display: flex;
     flex-direction: column;
@@ -22,13 +25,14 @@
     cursor: pointer;
 }
 
+/* Pattern Labels */
 .pattern-label {
     position: absolute;
     top: -30px;
     left: 0;
     right: 0;
     text-align: center;
-    color: #888;
+    color: var(--text-muted);
     font-size: 0.9rem;
 }
 
@@ -41,40 +45,46 @@
     font-size: 0.9rem;
 }
 
-/* Original pattern special styling */
-.pattern-container.original {
-    position: relative;
+.result-label.correct {
+    color: var(--color-success);
+    font-weight: bold;
 }
 
-.pattern-container.original:before {
+.result-label.incorrect {
+    color: var(--color-error);
+    font-weight: bold;
+}
+
+/* Original Pattern Highlight */
+.pattern-container.original::before {
     content: '';
     position: absolute;
     top: -8px;
     left: -8px;
     right: -8px;
     bottom: -8px;
-    border: 5px solid var(--primary-color);
+    border: 5px solid var(--color-primary);
     z-index: 0;
 }
 
 .pattern-container.original .pattern-label {
-    color: var(--primary-color);
+    color: var(--color-primary);
     font-weight: bold;
 }
 
-/* The actual pattern matrix */
+/* Pattern Matrix */
 .pattern {
     display: grid;
-    grid-template-columns: repeat(5, 30px); /* Default 5x5 grid */
+    grid-template-columns: repeat(5, 30px);
     grid-template-rows: repeat(5, 30px);
-    background-color: #282c34;
-    border: 2px solid rgba(140, 140, 160, 0.8);
+    background-color: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
     position: relative;
     z-index: 1;
 }
 
-/* Selected pattern highlight */
-.pattern-container.selected .pattern:after {
+/* Selected Pattern */
+.pattern-container.selected .pattern::after {
     content: '';
     position: absolute;
     top: 0;
@@ -85,43 +95,32 @@
     z-index: 2;
 }
 
-/* Matrix cells */
+/* Matrix Cells */
 .cell {
     width: 30px;
     height: 30px;
-    border: 1px solid #282832;
+    border: 1px solid var(--bg-tertiary);
 }
 
 .cell.filled {
-    background-color: rgb(255, 30, 30); /* Bright red for filled cells */
+    background-color: rgb(255, 30, 30);
 }
 
 .cell.empty {
-    background-color: rgb(30, 255, 30); /* Bright green for empty cells */
+    background-color: rgb(30, 255, 30);
 }
 
-/* Results screen styling */
-.result-label.correct {
-    color: var(--success-color);
-    font-weight: bold;
-}
-
-.result-label.incorrect {
-    color: var(--error-color);
-    font-weight: bold;
-}
-
-/* Responsive design */
+/* Responsive */
 @media (max-width: 1024px) {
     .patterns-row {
         gap: 20px;
     }
-    
+
     .pattern {
         grid-template-columns: repeat(5, 25px);
         grid-template-rows: repeat(5, 25px);
     }
-    
+
     .cell {
         width: 25px;
         height: 25px;
@@ -132,12 +131,12 @@
     .patterns-row {
         flex-direction: column;
     }
-    
-    .pattern-container.original:before {
+
+    .pattern-container.original::before {
         top: -6px;
         left: -6px;
         right: -6px;
         bottom: -6px;
-        border: 3px solid var(--primary-color);
+        border-width: 3px;
     }
-} 
+}

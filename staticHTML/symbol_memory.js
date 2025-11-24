@@ -39,44 +39,101 @@ const colorPalettes = [
 // Use default palette by default
 let activePalette = colorPalettes[0];
 
-// DOM elements
-const elements = {
-    startScreen: document.getElementById('start-screen'),
-    gameScreen: document.getElementById('game-screen'),
-    completeScreen: document.getElementById('complete-screen'),
-    startButton: document.getElementById('start-button'),
-    restartButton: document.getElementById('restart-button'),
-    symbolGrid: document.getElementById('symbol-grid'),
-    phaseText: document.getElementById('phase-text'),
-    answerPanel: document.getElementById('answer-panel'),
-    positionPanel: document.getElementById('position-panel'),
-    yesButton: document.getElementById('yes-button'),
-    noButton: document.getElementById('no-button'),
-    resultMessage: document.getElementById('result-message'),
-    levelDisplay: document.getElementById('level'),
-    scoreDisplay: document.getElementById('score'),
-    timeRemainingDisplay: document.getElementById('time-remaining'),
-    finalScoreDisplay: document.getElementById('final-score'),
-    correctAnswersDisplay: document.getElementById('correct-answers'),
-    totalQuestionsDisplay: document.getElementById('total-questions')
-};
+// DOM elements - populated in init() after DOM is ready
+let elements = {};
 
 // Keyboard navigation currently focused element
 let focusedCell = -1;
 
+// Module name for logging
+const MODULE_NAME = 'SymbolMemory';
+
+// Safe logging helper
+function log(level, message, data) {
+    if (typeof MetaMind !== 'undefined' && MetaMind.Debug) {
+        MetaMind.Debug[level](MODULE_NAME, message, data);
+    } else {
+        console[level === 'error' ? 'error' : level === 'warn' ? 'warn' : 'log'](`[${MODULE_NAME}]`, message, data || '');
+    }
+}
+
+// Safe element getter
+function getElement(id) {
+    const el = document.getElementById(id);
+    if (!el) {
+        log('warn', `Element not found: #${id}`);
+    }
+    return el;
+}
+
+// Safe event listener attachment
+function addClickListener(element, handler, name) {
+    if (element) {
+        element.addEventListener('click', function(e) {
+            try {
+                handler(e);
+            } catch (err) {
+                log('error', `Error in ${name} handler: ${err.message}`, err);
+            }
+        });
+        return true;
+    }
+    log('warn', `Cannot attach click listener: ${name} element is null`);
+    return false;
+}
+
 // Initialize the game
 function init() {
-    // Set up event listeners
-    elements.startButton.addEventListener('click', startGame);
-    elements.restartButton.addEventListener('click', startGame);
-    elements.yesButton.addEventListener('click', () => answerChanged(true));
-    elements.noButton.addEventListener('click', () => answerChanged(false));
-    
+    log('info', 'Initializing module');
+
+    // Populate DOM elements after DOM is ready
+    elements = {
+        startScreen: getElement('start-screen'),
+        gameScreen: getElement('game-screen'),
+        completeScreen: getElement('complete-screen'),
+        startButton: getElement('start-button'),
+        restartButton: getElement('restart-button'),
+        symbolGrid: getElement('symbol-grid'),
+        phaseText: getElement('phase-text'),
+        answerPanel: getElement('answer-panel'),
+        positionPanel: getElement('position-panel'),
+        yesButton: getElement('yes-button'),
+        noButton: getElement('no-button'),
+        resultMessage: getElement('result-message'),
+        levelDisplay: getElement('level'),
+        scoreDisplay: getElement('score'),
+        timeRemainingDisplay: getElement('time-remaining'),
+        finalScoreDisplay: getElement('final-score'),
+        correctAnswersDisplay: getElement('correct-answers'),
+        totalQuestionsDisplay: getElement('total-questions')
+    };
+
+    // Validate required elements
+    const requiredElements = ['startScreen', 'gameScreen', 'startButton', 'symbolGrid'];
+    const missing = requiredElements.filter(name => !elements[name]);
+    if (missing.length > 0) {
+        log('error', `Missing required elements: ${missing.join(', ')}`);
+        return; // Cannot proceed without required elements
+    }
+
+    // Set up event listeners with error handling
+    addClickListener(elements.startButton, startGame, 'startButton');
+    addClickListener(elements.restartButton, startGame, 'restartButton');
+    addClickListener(elements.yesButton, () => answerChanged(true), 'yesButton');
+    addClickListener(elements.noButton, () => answerChanged(false), 'noButton');
+
     // Add keyboard event listeners
-    document.addEventListener('keydown', handleKeyDown);
-    
+    document.addEventListener('keydown', function(e) {
+        try {
+            handleKeyDown(e);
+        } catch (err) {
+            log('error', `Error in keydown handler: ${err.message}`, err);
+        }
+    });
+
     // Show initial screen
     showScreen('start');
+    log('info', 'Module initialized successfully');
 }
 
 // Handle keyboard navigation
@@ -604,13 +661,27 @@ function checkAnswer() {
 
 // Update level and score displays
 function updateStats() {
-    elements.levelDisplay.textContent = state.level;
-    elements.scoreDisplay.textContent = state.score;
+    if (elements.levelDisplay) elements.levelDisplay.textContent = state.level;
+    if (elements.scoreDisplay) elements.scoreDisplay.textContent = state.score;
 }
 
 // Complete the game
 function completeGame() {
     showScreen('complete');
+
+    // Save progress to localStorage
+    if (typeof MetaMind !== 'undefined' && MetaMind.Progress) {
+        const accuracy = state.totalQuestions > 0
+            ? Math.round((state.correctAnswers / state.totalQuestions) * 100)
+            : 0;
+        MetaMind.Progress.saveSession('symbol_memory', {
+            score: state.score,
+            level: state.level,
+            accuracy: accuracy,
+            gridSize: state.gridSize
+        });
+        log('info', `Progress saved: score=${state.score}, level=${state.level}`);
+    }
 }
 
 // Initialize the game when the DOM is loaded

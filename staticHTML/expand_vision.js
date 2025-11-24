@@ -28,64 +28,121 @@ const wordList = [
     "brain", "energy", "power", "vision"
 ];
 
-// DOM elements
-const elements = {
-    startScreen: document.getElementById('start-screen'),
-    gameScreen: document.getElementById('game-screen'),
-    completeScreen: document.getElementById('complete-screen'),
-    startButton: document.getElementById('start-button'),
-    restartButton: document.getElementById('restart-button'),
-    oval: document.getElementById('focus-oval'),
-    centralContent: document.getElementById('central-content'),
-    focusPoint: document.getElementById('focus-point'),
-    numberTop: document.getElementById('number-top'),
-    numberRight: document.getElementById('number-right'),
-    numberBottom: document.getElementById('number-bottom'),
-    numberLeft: document.getElementById('number-left'),
-    roundDisplay: document.getElementById('round'),
-    totalRoundsDisplay: document.getElementById('total-rounds'),
-    timeRemainingDisplay: document.getElementById('time-remaining'),
-    sumPrompt: document.getElementById('sum-prompt'),
-    sumResult: document.getElementById('sum-result'),
-    sumValue: document.getElementById('sum-value'),
-    completedRounds: document.getElementById('completed-rounds'),
-    phaseText: document.getElementById('phase-text')
-};
+// DOM elements - populated in init() after DOM is ready
+let elements = {};
+
+// Module name for logging
+const MODULE_NAME = 'ExpandVision';
+
+// Safe logging helper
+function log(level, message, data) {
+    if (typeof MetaMind !== 'undefined' && MetaMind.Debug) {
+        MetaMind.Debug[level](MODULE_NAME, message, data);
+    } else {
+        console[level === 'error' ? 'error' : level === 'warn' ? 'warn' : 'log'](`[${MODULE_NAME}]`, message, data || '');
+    }
+}
+
+// Safe element getter
+function getElement(id) {
+    const el = document.getElementById(id);
+    if (!el) {
+        log('warn', `Element not found: #${id}`);
+    }
+    return el;
+}
+
+// Safe event listener attachment
+function addClickListener(element, handler, name) {
+    if (element) {
+        element.addEventListener('click', function(e) {
+            try {
+                handler(e);
+            } catch (err) {
+                log('error', `Error in ${name} handler: ${err.message}`, err);
+            }
+        });
+        return true;
+    }
+    log('warn', `Cannot attach click listener: ${name} element is null`);
+    return false;
+}
 
 // Initialize the game
 function init() {
-    // Set up event listeners
-    elements.startButton.addEventListener('click', startGame);
-    elements.restartButton.addEventListener('click', startGame);
-    
+    log('info', 'Initializing module');
+
+    // Populate DOM elements after DOM is ready
+    elements = {
+        startScreen: getElement('start-screen'),
+        gameScreen: getElement('game-screen'),
+        completeScreen: getElement('complete-screen'),
+        startButton: getElement('start-button'),
+        restartButton: getElement('restart-button'),
+        oval: getElement('focus-oval'),
+        centralContent: getElement('central-content'),
+        focusPoint: getElement('focus-point'),
+        numberTop: getElement('number-top'),
+        numberRight: getElement('number-right'),
+        numberBottom: getElement('number-bottom'),
+        numberLeft: getElement('number-left'),
+        roundDisplay: getElement('round'),
+        totalRoundsDisplay: getElement('total-rounds'),
+        timeRemainingDisplay: getElement('time-remaining'),
+        sumPrompt: getElement('sum-prompt'),
+        sumResult: getElement('sum-result'),
+        sumValue: getElement('sum-value'),
+        completedRounds: getElement('completed-rounds'),
+        phaseText: getElement('phase-text')
+    };
+
+    // Validate required elements
+    const requiredElements = ['startScreen', 'gameScreen', 'startButton', 'oval'];
+    const missing = requiredElements.filter(name => !elements[name]);
+    if (missing.length > 0) {
+        log('error', `Missing required elements: ${missing.join(', ')}`);
+        return;
+    }
+
+    // Set up event listeners with error handling
+    addClickListener(elements.startButton, startGame, 'startButton');
+    addClickListener(elements.restartButton, startGame, 'restartButton');
+
     // Add keyboard event listener
-    document.addEventListener('keydown', (e) => {
-        if (e.code === 'Space' && state.currentScreen === 'game') {
-            resetGame();
+    document.addEventListener('keydown', function(e) {
+        try {
+            if (e.code === 'Space' && state.currentScreen === 'game') {
+                resetGame();
+            }
+        } catch (err) {
+            log('error', `Error in keydown handler: ${err.message}`, err);
         }
     });
-    
+
     // Show initial screen
     showScreen('start');
+    log('info', 'Module initialized successfully');
 }
 
 // Show the specified screen
 function showScreen(screenName) {
     state.currentScreen = screenName;
-    elements.startScreen.classList.add('hidden');
-    elements.gameScreen.classList.add('hidden');
-    elements.completeScreen.classList.add('hidden');
-    
+
+    // Safely hide all screens
+    if (elements.startScreen) elements.startScreen.classList.add('hidden');
+    if (elements.gameScreen) elements.gameScreen.classList.add('hidden');
+    if (elements.completeScreen) elements.completeScreen.classList.add('hidden');
+
     switch(screenName) {
         case 'start':
-            elements.startScreen.classList.remove('hidden');
+            if (elements.startScreen) elements.startScreen.classList.remove('hidden');
             break;
         case 'game':
-            elements.gameScreen.classList.remove('hidden');
+            if (elements.gameScreen) elements.gameScreen.classList.remove('hidden');
             break;
         case 'complete':
-            elements.completeScreen.classList.remove('hidden');
-            elements.completedRounds.textContent = state.round;
+            if (elements.completeScreen) elements.completeScreen.classList.remove('hidden');
+            if (elements.completedRounds) elements.completedRounds.textContent = state.round;
             break;
     }
 }
@@ -178,6 +235,16 @@ function startRound() {
     if (state.round > state.totalRounds) {
         state.phase = 'completed';
         showScreen('complete');
+
+        // Save progress to localStorage
+        if (typeof MetaMind !== 'undefined' && MetaMind.Progress) {
+            MetaMind.Progress.saveSession('expand_vision', {
+                score: state.score,
+                level: state.level,
+                accuracy: state.correctAnswers > 0 ? Math.round((state.correctAnswers / state.totalRounds) * 100) : 0
+            });
+            log('info', `Progress saved: score=${state.score}, level=${state.level}`);
+        }
         return;
     }
     

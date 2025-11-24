@@ -12,54 +12,108 @@ const state = {
     totalPatterns: 6
 };
 
-// DOM elements
-const elements = {
-    startScreen: document.getElementById('start-screen'),
-    gameScreen: document.getElementById('game-screen'),
-    resultsScreen: document.getElementById('results-screen'),
-    startButton: document.getElementById('start-button'),
-    checkButton: document.getElementById('check-button'),
-    nextButton: document.getElementById('next-button'),
-    levelDisplay: document.getElementById('level'),
-    scoreDisplay: document.getElementById('score'),
-    finalScoreDisplay: document.getElementById('final-score')
-};
+// DOM elements - populated in init() after DOM is ready
+let elements = {};
+
+// Module name for logging
+const MODULE_NAME = 'MorphMatrix';
+
+// Safe logging helper
+function log(level, message, data) {
+    if (typeof MetaMind !== 'undefined' && MetaMind.Debug) {
+        MetaMind.Debug[level](MODULE_NAME, message, data);
+    } else {
+        console[level === 'error' ? 'error' : level === 'warn' ? 'warn' : 'log'](`[${MODULE_NAME}]`, message, data || '');
+    }
+}
+
+// Safe element getter
+function getElement(id) {
+    const el = document.getElementById(id);
+    if (!el) {
+        log('warn', `Element not found: #${id}`);
+    }
+    return el;
+}
+
+// Safe event listener attachment
+function addClickListener(element, handler, name) {
+    if (element) {
+        element.addEventListener('click', function(e) {
+            try {
+                handler(e);
+            } catch (err) {
+                log('error', `Error in ${name} handler: ${err.message}`, err);
+            }
+        });
+        return true;
+    }
+    log('warn', `Cannot attach click listener: ${name} element is null`);
+    return false;
+}
 
 // Initialize the game
 function init() {
-    // Set up event listeners
-    elements.startButton.addEventListener('click', startGame);
-    elements.checkButton.addEventListener('click', checkAnswers);
-    elements.nextButton.addEventListener('click', nextChallenge);
-    
+    log('info', 'Initializing module');
+
+    // Populate DOM elements after DOM is ready
+    elements = {
+        startScreen: getElement('start-screen'),
+        gameScreen: getElement('game-screen'),
+        resultsScreen: getElement('results-screen'),
+        startButton: getElement('start-button'),
+        checkButton: getElement('check-button'),
+        nextButton: getElement('next-button'),
+        levelDisplay: getElement('level'),
+        scoreDisplay: getElement('score'),
+        finalScoreDisplay: getElement('final-score')
+    };
+
+    // Validate required elements
+    const requiredElements = ['startScreen', 'gameScreen', 'startButton'];
+    const missing = requiredElements.filter(name => !elements[name]);
+    if (missing.length > 0) {
+        log('error', `Missing required elements: ${missing.join(', ')}`);
+        return;
+    }
+
+    // Set up event listeners with error handling
+    addClickListener(elements.startButton, startGame, 'startButton');
+    addClickListener(elements.checkButton, checkAnswers, 'checkButton');
+    addClickListener(elements.nextButton, nextChallenge, 'nextButton');
+
     // Add click handlers to pattern containers
     for (let i = 0; i < state.totalPatterns; i++) {
-        const patternElement = document.getElementById(`pattern${i}`);
+        const patternElement = getElement(`pattern${i}`);
         if (patternElement) {
-            patternElement.addEventListener('click', () => togglePatternSelection(i));
+            addClickListener(patternElement, () => togglePatternSelection(i), `pattern${i}`);
         }
     }
-    
+
     // Show initial screen
     showScreen('start');
+    log('info', 'Module initialized successfully');
 }
 
 // Show the specified screen
 function showScreen(screenName) {
     state.currentScreen = screenName;
-    elements.startScreen.classList.add('hidden');
-    elements.gameScreen.classList.add('hidden');
-    elements.resultsScreen.classList.add('hidden');
-    
+
+    // Safely hide all screens
+    if (elements.startScreen) elements.startScreen.classList.add('hidden');
+    if (elements.gameScreen) elements.gameScreen.classList.add('hidden');
+    if (elements.resultsScreen) elements.resultsScreen.classList.add('hidden');
+
+    // Show requested screen
     switch(screenName) {
         case 'start':
-            elements.startScreen.classList.remove('hidden');
+            if (elements.startScreen) elements.startScreen.classList.remove('hidden');
             break;
         case 'game':
-            elements.gameScreen.classList.remove('hidden');
+            if (elements.gameScreen) elements.gameScreen.classList.remove('hidden');
             break;
         case 'results':
-            elements.resultsScreen.classList.remove('hidden');
+            if (elements.resultsScreen) elements.resultsScreen.classList.remove('hidden');
             break;
     }
 }
@@ -263,9 +317,21 @@ function checkAnswers() {
     
     // Update UI
     updateStats();
-    
+
     // Show results screen
     showScreen('results');
+
+    // Save progress to localStorage
+    if (typeof MetaMind !== 'undefined' && MetaMind.Progress) {
+        const accuracy = Math.round((correctAnswers / state.totalPatterns) * 100);
+        MetaMind.Progress.saveSession('morph_matrix', {
+            score: state.score,
+            level: state.level,
+            accuracy: accuracy,
+            matrixSize: state.matrixSize
+        });
+        log('info', `Progress saved: score=${state.score}, level=${state.level}`);
+    }
 }
 
 // Prepare for next challenge
