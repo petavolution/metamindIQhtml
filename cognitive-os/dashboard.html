@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognitive Profile - MetaMindIQTrain</title>
+    <style>
+        :root {
+            --bg-color: #14191f;
+            --text-color: #f0f0f0;
+            --card-bg: #1e242c;
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .card h2 {
+            margin-bottom: 16px;
+            color: var(--primary-color);
+        }
+
+        .skill-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .skill-card {
+            background: rgba(255,255,255,0.05);
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .skill-name {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .skill-rating {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        .skill-level {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .domain-section {
+            margin: 24px 0;
+        }
+
+        .domain-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .back-button:hover {
+            transform: scale(1.05);
+        }
+
+        .session-plan {
+            padding: 0;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #aaa;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧠 Your Cognitive Profile</h1>
+            <p>Unified skill tracking across all training modules</p>
+        </header>
+
+        <div class="card">
+            <h2>📊 Overall Statistics</h2>
+            <div id="overall-stats" class="loading">Loading...</div>
+        </div>
+
+        <div class="card">
+            <h2>🎯 Recommended Training Session</h2>
+            <div id="session-plan" class="session-plan loading">Generating personalized plan...</div>
+        </div>
+
+        <div class="card">
+            <h2>💪 Your Cognitive Skills</h2>
+            <div id="skills-container" class="loading">Loading skills...</div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="../staticHTML/index.html" class="back-button">← Back to Modules</a>
+        </div>
+    </div>
+
+    <!-- Load Cognitive OS -->
+    <script src="core/skill_graph.js"></script>
+    <script src="core/performance_tracker.js"></script>
+    <script src="plugins/session_composer.js"></script>
+
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOverallStats();
+            loadSessionPlan();
+            loadSkillsDisplay();
+        });
+
+        function loadOverallStats() {
+            const profile = SkillGraph.getCognitiveProfile();
+
+            const statsHtml = `
+                <div class="stat-row">
+                    <span class="stat-label">Overall Rating</span>
+                    <span class="stat-value">${Math.round(profile.overallRating)}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Total Skills Tracked</span>
+                    <span class="stat-value">${Object.keys(SkillGraph.SKILLS).length}</span>
+                </div>
+                <div style="margin-top: 20px;">
+                    <h3 style="margin-bottom: 12px; color: #4CAF50;">💪 Strongest Skills</h3>
+                    ${profile.strongest.map(skill => {
+                        const level = SkillGraph.getSkillLevel(skill.rating);
+                        return `
+                            <div class="stat-row">
+                                <span class="stat-label">${skill.name}</span>
+                                <span class="stat-value">${Math.round(skill.rating)}</span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+                <div style="margin-top: 20px;">
+                    <h3 style="margin-bottom: 12px; color: #ff9800;">🎯 Areas for Improvement</h3>
+                    ${profile.weakest.map(skill => {
+                        const level = SkillGraph.getSkillLevel(skill.rating);
+                        return `
+                            <div class="stat-row">
+                                <span class="stat-label">${skill.name}</span>
+                                <span class="stat-value">${Math.round(skill.rating)}</span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+
+            document.getElementById('overall-stats').innerHTML = statsHtml;
+        }
+
+        function loadSessionPlan() {
+            const session = SessionComposer.composeSession(20);
+            const container = document.getElementById('session-plan');
+
+            if (session) {
+                SessionComposer.renderSessionPlan(container, session);
+            } else {
+                container.innerHTML = `
+                    <p style="padding: 20px; color: #aaa;">
+                        Complete at least one training module to receive personalized recommendations.
+                    </p>
+                    <a href="../staticHTML/index.html" class="back-button" style="margin: 20px;">
+                        Start Training →
+                    </a>
+                `;
+            }
+        }
+
+        function loadSkillsDisplay() {
+            const profile = SkillGraph.getCognitiveProfile();
+            const container = document.getElementById('skills-container');
+
+            let html = '';
+
+            // Group skills by domain
+            Object.values(profile.domains).forEach(domain => {
+                html += `
+                    <div class="domain-section">
+                        <div class="domain-header">${domain.name.toUpperCase()} (Avg: ${Math.round(domain.avgRating)})</div>
+                        <div class="skill-grid">
+                            ${domain.skills.map(skill => {
+                                const level = SkillGraph.getSkillLevel(skill.rating);
+                                return `
+                                    <div class="skill-card">
+                                        <div class="skill-name">${skill.name}</div>
+                                        <div class="skill-rating">${Math.round(skill.rating)}</div>
+                                        <span class="skill-level" style="background: ${level.color};">
+                                            ${level.label}
+                                        </span>
+                                        <div style="margin-top: 12px; font-size: 12px; color: #888;">
+                                            Confidence: ${skill.confidence}
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
