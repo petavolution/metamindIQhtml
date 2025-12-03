@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognitive OS - Quick Test</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #14191f;
+            color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { margin-bottom: 20px; color: #667eea; }
+        .test-section {
+            background: #1e242c;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .test-section h2 { color: #32ff32; margin-bottom: 15px; font-size: 18px; }
+        .test-item {
+            padding: 10px;
+            margin: 8px 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+        }
+        .pass { color: #32ff32; }
+        .fail { color: #ff3232; }
+        .pending { color: #ff9500; }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #5568d3; }
+        pre {
+            background: #0a0e13;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-dot.pass { background: #32ff32; }
+        .status-dot.fail { background: #ff3232; }
+        .status-dot.pending { background: #ff9500; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Cognitive OS - Quick Test</h1>
+        <p style="margin-bottom: 20px; color: #aaa;">
+            This page tests if all Cognitive OS components load correctly.
+        </p>
+
+        <!-- Test Results -->
+        <div class="test-section">
+            <h2>📦 Script Loading Test</h2>
+            <div id="loading-tests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🧠 Skill Graph Test</h2>
+            <div id="skill-tests"></div>
+            <button onclick="testSkillGraph()">Test Skill Functions</button>
+        </div>
+
+        <div class="test-section">
+            <h2>📊 Performance Tracker Test</h2>
+            <div id="performance-tests"></div>
+            <button onclick="testPerformanceTracker()">Test Performance Functions</button>
+        </div>
+
+        <div class="test-section">
+            <h2>🎯 Session Composer Test</h2>
+            <div id="composer-tests"></div>
+            <button onclick="testSessionComposer()">Test Composer Functions</button>
+        </div>
+
+        <div class="test-section">
+            <h2>🔗 Module Adapter Test</h2>
+            <div id="adapter-tests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📋 Quick Actions</h2>
+            <button onclick="window.location.href='dashboard.html'">Open Dashboard</button>
+            <button onclick="window.location.href='../staticHTML/symbol_memory.html'">Test Symbol Memory</button>
+            <button onclick="window.location.href='../staticHTML/index.html'">Module Selector</button>
+            <button onclick="clearAllData()">Clear All Data</button>
+        </div>
+
+        <div class="test-section">
+            <h2>📝 Console Log</h2>
+            <pre id="console-log"></pre>
+        </div>
+    </div>
+
+    <!-- Load Cognitive OS -->
+    <script src="core/skill_graph.js"></script>
+    <script src="core/performance_tracker.js"></script>
+    <script src="plugins/session_composer.js"></script>
+    <script src="core/module_adapter.js"></script>
+
+    <script>
+        // Custom console logger
+        const consoleLog = document.getElementById('console-log');
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            consoleLog.textContent += args.join(' ') + '\n';
+            consoleLog.scrollTop = consoleLog.scrollHeight;
+        };
+
+        // Test helpers
+        function showTest(containerId, name, status, message = '') {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.className = 'test-item';
+            div.innerHTML = `
+                <span class="status-dot ${status}"></span>
+                <strong>${name}:</strong>
+                <span class="${status}">${status.toUpperCase()}</span>
+                ${message ? `<br><small style="color: #888;">${message}</small>` : ''}
+            `;
+            container.appendChild(div);
+        }
+
+        // Run loading tests
+        function testLoading() {
+            showTest('loading-tests', 'SkillGraph',
+                typeof SkillGraph !== 'undefined' ? 'pass' : 'fail',
+                typeof SkillGraph !== 'undefined' ? 'Loaded successfully' : 'Not loaded'
+            );
+
+            showTest('loading-tests', 'PerformanceTracker',
+                typeof PerformanceTracker !== 'undefined' ? 'pass' : 'fail',
+                typeof PerformanceTracker !== 'undefined' ? 'Loaded successfully' : 'Not loaded'
+            );
+
+            showTest('loading-tests', 'SessionComposer',
+                typeof SessionComposer !== 'undefined' ? 'pass' : 'fail',
+                typeof SessionComposer !== 'undefined' ? 'Loaded successfully' : 'Not loaded'
+            );
+
+            showTest('loading-tests', 'ModuleAdapter',
+                typeof ModuleAdapter !== 'undefined' ? 'pass' : 'fail',
+                typeof ModuleAdapter !== 'undefined' ? 'Loaded successfully' : 'Not loaded'
+            );
+        }
+
+        // Test SkillGraph
+        function testSkillGraph() {
+            const container = document.getElementById('skill-tests');
+            container.innerHTML = '';
+
+            try {
+                // Test 1: Get all skills
+                const skills = SkillGraph.getAllSkills();
+                showTest('skill-tests', 'Get All Skills',
+                    skills.length === 18 ? 'pass' : 'fail',
+                    `Found ${skills.length} skills (expected 18)`
+                );
+
+                // Test 2: Get module skills
+                const moduleSkills = SkillGraph.getModuleSkills('symbol_memory');
+                showTest('skill-tests', 'Get Module Skills',
+                    moduleSkills.length === 3 ? 'pass' : 'fail',
+                    `Symbol Memory trains ${moduleSkills.length} skills: ${moduleSkills.map(s => s.name).join(', ')}`
+                );
+
+                // Test 3: Get cognitive profile
+                const profile = SkillGraph.getCognitiveProfile();
+                showTest('skill-tests', 'Get Cognitive Profile',
+                    profile.overallRating ? 'pass' : 'fail',
+                    `Overall rating: ${Math.round(profile.overallRating)}`
+                );
+
+                // Test 4: Get weakest skills
+                const weak = SkillGraph.getWeakestSkills(3);
+                showTest('skill-tests', 'Get Weakest Skills',
+                    weak.length > 0 ? 'pass' : 'fail',
+                    `Weakest: ${weak.map(s => s.name).join(', ')}`
+                );
+
+                // Test 5: Update skill rating
+                const testSkill = 'wm.visual';
+                const update = SkillGraph.updateSkillRating(testSkill, { correct: true, difficulty: 1500 });
+                showTest('skill-tests', 'Update Skill Rating',
+                    update.delta ? 'pass' : 'fail',
+                    `Rating changed by ${update.delta.toFixed(2)}`
+                );
+
+            } catch (error) {
+                showTest('skill-tests', 'Error', 'fail', error.message);
+            }
+        }
+
+        // Test PerformanceTracker
+        function testPerformanceTracker() {
+            const container = document.getElementById('performance-tests');
+            container.innerHTML = '';
+
+            try {
+                // Test 1: Start session
+                const session = PerformanceTracker.startSession('test_module');
+                showTest('performance-tests', 'Start Session',
+                    session ? 'pass' : 'fail',
+                    'Session started successfully'
+                );
+
+                // Test 2: Record trial
+                const trial = PerformanceTracker.recordTrial({
+                    moduleId: 'test_module',
+                    correct: true,
+                    reactionTime: 1234,
+                    difficulty: { level: 1 },
+                    score: 10
+                });
+                showTest('performance-tests', 'Record Trial',
+                    trial ? 'pass' : 'fail',
+                    `Trial recorded (RT: ${trial.reactionTime}ms)`
+                );
+
+                // Test 3: End session
+                const result = PerformanceTracker.endSession();
+                showTest('performance-tests', 'End Session',
+                    result ? 'pass' : 'fail',
+                    `Session ended (${result.summary.totalTrials} trials)`
+                );
+
+                // Test 4: Get history
+                const history = PerformanceTracker.getSessionHistory();
+                showTest('performance-tests', 'Get Session History',
+                    Array.isArray(history) ? 'pass' : 'fail',
+                    `Found ${history.length} sessions`
+                );
+
+            } catch (error) {
+                showTest('performance-tests', 'Error', 'fail', error.message);
+            }
+        }
+
+        // Test SessionComposer
+        function testSessionComposer() {
+            const container = document.getElementById('composer-tests');
+            container.innerHTML = '';
+
+            try {
+                // Test 1: Compose session
+                const session = SessionComposer.composeSession(20);
+                showTest('composer-tests', 'Compose Session',
+                    session ? 'pass' : 'fail',
+                    session ? `Recommended ${session.recommendedModules.length} modules` : 'No session generated'
+                );
+
+                // Test 2: Explain session
+                if (session) {
+                    const explanation = SessionComposer.explainSession(session);
+                    showTest('composer-tests', 'Explain Session',
+                        explanation.length > 0 ? 'pass' : 'fail',
+                        'Explanation generated'
+                    );
+                }
+
+                // Test 3: Get recent modules
+                const recent = SessionComposer.getRecentModules(7);
+                showTest('composer-tests', 'Get Recent Modules',
+                    Array.isArray(recent) ? 'pass' : 'fail',
+                    `${recent.length} modules trained recently`
+                );
+
+                // Test 4: Estimate fatigue
+                const fatigue = SessionComposer.estimateFatigue();
+                showTest('composer-tests', 'Estimate Fatigue',
+                    typeof fatigue === 'number' ? 'pass' : 'fail',
+                    `Fatigue level: ${(fatigue * 100).toFixed(0)}%`
+                );
+
+            } catch (error) {
+                showTest('composer-tests', 'Error', 'fail', error.message);
+            }
+        }
+
+        // Test ModuleAdapter
+        function testModuleAdapter() {
+            const container = document.getElementById('adapter-tests');
+
+            try {
+                showTest('adapter-tests', 'Module Detection',
+                    ModuleAdapter.detectModule() ? 'pass' : 'fail',
+                    `Detected: ${ModuleAdapter.detectModule()}`
+                );
+
+                showTest('adapter-tests', 'Current Module',
+                    ModuleAdapter.getCurrentModuleId() ? 'pass' : 'pending',
+                    ModuleAdapter.getCurrentModuleId() || 'No module active'
+                );
+
+                showTest('adapter-tests', 'Session Active',
+                    typeof ModuleAdapter.isSessionActive() === 'boolean' ? 'pass' : 'fail',
+                    `Active: ${ModuleAdapter.isSessionActive()}`
+                );
+
+            } catch (error) {
+                showTest('adapter-tests', 'Error', 'fail', error.message);
+            }
+        }
+
+        // Clear all data
+        function clearAllData() {
+            if (confirm('Clear ALL Cognitive OS data? This cannot be undone.')) {
+                SkillGraph.resetSkills();
+                PerformanceTracker.clearAllSessions();
+                alert('All data cleared! Refresh to see changes.');
+                location.reload();
+            }
+        }
+
+        // Run tests on load
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                testLoading();
+                testModuleAdapter();
+            }, 100);
+        });
+    </script>
+</body>
+</html>
