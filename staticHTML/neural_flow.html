@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="module-id" content="neural_flow">
+    <title>Neural Flow - Cognitive Flexibility Training</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="neural_flow.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen">
+            <h1>Neural Flow</h1>
+            <div class="subtitle">Cognitive Flexibility Training</div>
+            <div class="instructions">
+                <p><strong>Train your mental agility through rapid task-switching.</strong></p>
+                <p>You'll see shapes with different attributes: <strong>COLOR</strong>, <strong>SHAPE</strong>, and <strong>SIZE</strong>.</p>
+                <p>The current sorting rule will be displayed at the top.</p>
+                <p>Decide if the presented shape matches the target based on the active rule.</p>
+                <p>Rules change frequently - stay flexible and adapt quickly!</p>
+                <br>
+                <div class="example-box">
+                    <h3>Example:</h3>
+                    <p>Rule: <strong>"Match by COLOR"</strong></p>
+                    <p>Target: Red Circle (small)</p>
+                    <p>Stimulus: Red Square (large) → <span class="correct">✓ MATCH</span> (both red)</p>
+                    <p>Stimulus: Blue Circle (small) → <span class="incorrect">✗ NO MATCH</span> (different colors)</p>
+                </div>
+                <br>
+                <p><strong>Controls:</strong> Press <kbd>←</kbd> for NO MATCH, <kbd>→</kbd> for MATCH</p>
+            </div>
+            <button id="start-button" class="button">Start Training</button>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen hidden">
+            <h1>Neural Flow</h1>
+
+            <div class="stats">
+                <div class="stat">
+                    <span class="label">Level:</span>
+                    <span id="level" class="value">1</span>
+                </div>
+                <div class="stat">
+                    <span class="label">Score:</span>
+                    <span id="score" class="value">0</span>
+                </div>
+                <div class="stat">
+                    <span class="label">Streak:</span>
+                    <span id="streak" class="value">0</span>
+                </div>
+                <div class="stat">
+                    <span class="label">Time:</span>
+                    <span id="time" class="value">0.0s</span>
+                </div>
+            </div>
+
+            <div class="rule-display">
+                <div class="rule-label">Current Rule:</div>
+                <div id="current-rule" class="rule-text">Match by COLOR</div>
+            </div>
+
+            <div class="target-area">
+                <div class="target-label">Target:</div>
+                <div id="target-shape" class="shape-container"></div>
+            </div>
+
+            <div class="stimulus-area">
+                <div class="stimulus-label">Does this match?</div>
+                <div id="stimulus-shape" class="shape-container"></div>
+            </div>
+
+            <div class="controls-hint">
+                <kbd>←</kbd> NO MATCH&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<kbd>→</kbd> MATCH
+            </div>
+
+            <div id="feedback-display" class="feedback-display hidden"></div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="screen hidden">
+            <h1>Training Complete!</h1>
+
+            <div class="results-summary">
+                <div class="result-item">
+                    <div class="result-label">Final Score</div>
+                    <div id="final-score" class="result-value">0</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">Accuracy</div>
+                    <div id="final-accuracy" class="result-value">0%</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">Best Streak</div>
+                    <div id="best-streak" class="result-value">0</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">Avg Response Time</div>
+                    <div id="avg-time" class="result-value">0ms</div>
+                </div>
+            </div>
+
+            <div class="performance-breakdown">
+                <h2>Performance by Rule Type</h2>
+                <div id="rule-breakdown" class="rule-stats"></div>
+            </div>
+
+            <div class="cognitive-insights">
+                <h2>Cognitive Insights</h2>
+                <div id="insights" class="insights-list"></div>
+            </div>
+
+            <div class="button-group">
+                <button id="restart-button" class="button">Train Again</button>
+                <a href="index.html" class="button secondary">Back to Menu</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="core.js"></script>
+    <script src="neural_flow.js"></script>
+
+    <!-- Cognitive OS Integration -->
+    <script src="../cognitive-os/core/skill_graph.js"></script>
+    <script src="../cognitive-os/core/performance_tracker.js"></script>
+    <script src="../cognitive-os/plugins/session_composer.js"></script>
+    <script src="../cognitive-os/core/module_adapter.js"></script>
+</body>
+</html>

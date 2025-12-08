@@ -188,6 +188,7 @@ const SkillGraph = (function() {
         'symbol_memory': ['wm.visual', 'wm.binding', 'attn.selective'],
         'morph_matrix': ['wm.spatial', 'percept.discrimination', 'control.conflict'],
         'expand_vision': ['attn.breadth', 'attn.divided', 'percept.temporal'],
+        'neural_flow': ['control.switching', 'control.conflict', 'percept.temporal'],
         'neural_synthesis': ['xmodal.audiovisual', 'xmodal.sequence', 'wm.sequence'],
         'music_theory': ['audio.pitch', 'audio.parsing', 'percept.discrimination'],
         'psychoacoustic_wizard': ['audio.rhythm', 'percept.temporal', 'control.conflict']
