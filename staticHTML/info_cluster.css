@@ -1,0 +1,467 @@
+/* Info Cluster - Chunking Strategy Training Styles */
+
+.subtitle {
+    font-size: 1.2em;
+    color: #666;
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
+
+.example-box {
+    background: #f8f9fa;
+    border-left: 4px solid #2ecc71;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.example-box h3 {
+    margin-top: 0;
+    color: #2ecc71;
+}
+
+.example-box code {
+    background: #e9ecef;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 1em;
+    color: #333;
+}
+
+.instructions ul {
+    margin-left: 20px;
+    line-height: 1.8;
+}
+
+/* Stats Bar */
+.stats {
+    display: flex;
+    justify-content: space-around;
+    background: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat .label {
+    font-size: 0.9em;
+    color: #666;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.stat .value {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Phase Indicator */
+.phase-indicator {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.phase-text {
+    font-size: 1.3em;
+    font-weight: 500;
+    text-align: center;
+    color: #2ecc71;
+    margin-bottom: 15px;
+}
+
+.timer-bar {
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.timer-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2ecc71 0%, #27ae60 100%);
+    transition: width 0.1s linear;
+    border-radius: 4px;
+}
+
+/* Sequence Display */
+.sequence-display {
+    background: #fff;
+    padding: 40px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.sequence-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    max-width: 800px;
+}
+
+.sequence-item {
+    min-width: 60px;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8em;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.sequence-item.number {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.sequence-item.letter {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.sequence-item.color-swatch {
+    background: var(--swatch-color);
+    border: 3px solid #333;
+    min-width: 70px;
+    min-height: 70px;
+}
+
+.sequence-item.pattern {
+    background: white;
+    border: 2px solid #333;
+    font-size: 2.5em;
+}
+
+.sequence-item.fade-in {
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Recall Area */
+.recall-area {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.recall-hint {
+    font-size: 1.1em;
+    color: #666;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.recall-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    min-height: 100px;
+}
+
+.recall-option {
+    min-width: 55px;
+    min-height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.recall-option:hover:not(.selected) {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.recall-option.selected {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.recall-progress {
+    margin-bottom: 20px;
+}
+
+.recall-sequence {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    min-height: 80px;
+    padding: 20px;
+    background: #e9ecef;
+    border-radius: 8px;
+    border: 2px dashed #adb5bd;
+}
+
+.recall-sequence:empty::before {
+    content: 'Your sequence will appear here...';
+    color: #6c757d;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.recall-item {
+    min-width: 50px;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4em;
+    font-weight: bold;
+    border-radius: 6px;
+    padding: 6px 10px;
+    animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.button.small {
+    padding: 8px 20px;
+    font-size: 0.95em;
+    margin: 5px;
+}
+
+.button.secondary {
+    background: #6c757d;
+}
+
+.button.secondary:hover {
+    background: #5a6268;
+}
+
+/* Feedback Display */
+.feedback-display {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 30px 50px;
+    border-radius: 15px;
+    font-size: 2em;
+    font-weight: bold;
+    z-index: 1000;
+    animation: feedbackPulse 0.8s ease;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.feedback-display.correct {
+    background: rgba(46, 204, 113, 0.95);
+    color: white;
+}
+
+.feedback-display.incorrect {
+    background: rgba(231, 76, 60, 0.95);
+    color: white;
+}
+
+.feedback-display.partial {
+    background: rgba(241, 196, 15, 0.95);
+    color: white;
+}
+
+@keyframes feedbackPulse {
+    0%, 100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    15%, 85% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Results Screen */
+.results-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.result-item {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.result-label {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.result-value {
+    font-size: 2em;
+    font-weight: bold;
+    color: #2ecc71;
+}
+
+.performance-breakdown,
+.cognitive-insights {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.performance-breakdown h2,
+.cognitive-insights h2 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 2px solid #2ecc71;
+    padding-bottom: 10px;
+}
+
+.type-stats {
+    display: grid;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.type-stat-item {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.type-stat-name {
+    font-weight: 500;
+    color: #333;
+}
+
+.type-stat-value {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #2ecc71;
+}
+
+.insights-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+}
+
+.insight-item {
+    padding: 12px 15px;
+    margin: 10px 0;
+    background: #f8f9fa;
+    border-left: 4px solid #2ecc71;
+    border-radius: 5px;
+}
+
+.insight-item.positive {
+    border-left-color: #2ecc71;
+    background: #d4edda;
+}
+
+.insight-item.negative {
+    border-left-color: #e74c3c;
+    background: #f8d7da;
+}
+
+.insight-item.neutral {
+    border-left-color: #f39c12;
+    background: #fff3cd;
+}
+
+.button-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .stats {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .stat {
+        flex: 1 1 45%;
+    }
+
+    .sequence-item {
+        min-width: 50px;
+        min-height: 50px;
+        font-size: 1.5em;
+    }
+
+    .recall-option {
+        min-width: 45px;
+        min-height: 45px;
+        font-size: 1.3em;
+    }
+
+    .results-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+}
